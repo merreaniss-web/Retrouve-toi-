@@ -1,0 +1,1007 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#09121f">
+  <title>Tempo GPS — Trouve le trajet le plus rapide</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <style>
+    :root {
+      --bg: #09121f;
+      --panel: #121e30;
+      --panel2: #19283c;
+      --green: #32e6a2;
+      --text: #f4f7fb;
+      --muted: #98a9bd;
+      --border: #293b52;
+      --danger: #ff7676;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Arial, sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    button {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app {
+      max-width: 1000px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: max(12px, env(safe-area-inset-top)) 14px
+        max(12px, env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 7px 3px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      background: var(--green);
+      color: var(--bg);
+      font-weight: 950;
+      font-size: 27px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      font-weight: 900;
+      font-size: 19px;
+      letter-spacing: 1.5px;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .gps-status {
+      margin-left: auto;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 30px;
+      padding: 8px 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    .gps-status::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .search-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .label {
+      display: block;
+      font-weight: 800;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin: 2px 0 9px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    #destination {
+      min-width: 0;
+      flex: 1;
+      height: 49px;
+      padding: 0 14px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: #0c1727;
+      color: var(--text);
+    }
+
+    #destination:focus {
+      border-color: var(--green);
+    }
+
+    #destination::placeholder { color: #75879c; }
+
+    .button {
+      border: 0;
+      border-radius: 13px;
+      padding: 13px 15px;
+      font-weight: 850;
+      font-size: 13px;
+      min-height: 46px;
+    }
+
+    .primary {
+      background: var(--green);
+      color: #06150f;
+    }
+
+    .secondary {
+      color: var(--text);
+      background: var(--panel2);
+      border: 1px solid var(--border);
+    }
+
+    .button:disabled {
+      cursor: wait;
+      opacity: .6;
+    }
+
+    .search-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .search-actions button { flex: 1; }
+
+    #status {
+      display: none;
+      margin-top: 11px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      border-radius: 10px;
+      background: #0c1727;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    #status.visible { display: block; }
+    #status.error { color: var(--danger); }
+
+    .places {
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .place-option {
+      text-align: left;
+      display: block;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel2);
+      color: var(--text);
+      padding: 12px;
+    }
+
+    .place-option:active { border-color: var(--green); }
+
+    .place-name {
+      font-size: 13px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .place-detail {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .map-shell {
+      position: relative;
+      min-height: 300px;
+      height: min(47vh, 530px);
+      border-radius: 19px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #172538;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      min-height: 300px;
+      z-index: 1;
+    }
+
+    .map-button {
+      position: absolute;
+      z-index: 500;
+      top: 12px;
+      right: 12px;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 3px 14px #0003;
+    }
+
+    .results {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      padding: 16px;
+      gap: 13px;
+    }
+
+    .results.visible {
+      display: grid;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+
+    .result-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-title {
+      margin-top: 5px;
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .badge {
+      background: #153e33;
+      color: var(--green);
+      padding: 7px 9px;
+      border-radius: 8px;
+      font-size: 9px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric {
+      padding: 15px;
+      border-radius: 13px;
+      background: #0b1626;
+    }
+
+    .metric-value {
+      color: var(--green);
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .metric-label {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    #arrival { color: var(--text); }
+
+    .route-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      gap: 10px;
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      color: var(--text);
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .route-option.selected {
+      border-color: var(--green);
+      background: #142d2b;
+    }
+
+    .route-option-name {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .route-option-detail {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .route-option-time {
+      color: var(--green);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .launch-button {
+      width: 100%;
+      min-height: 51px;
+      font-size: 14px;
+    }
+
+    .disclaimer {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+      padding: 1px 3px 5px;
+    }
+
+    .footer a { color: var(--muted); }
+
+    .leaflet-container { background: #172538; }
+    .leaflet-control-attribution { font-size: 9px !important; }
+
+    @media (min-width: 760px) {
+      .app { padding: 22px; }
+      .map-shell { height: 480px; }
+      .search-panel { padding: 18px; }
+      .search-row-desktop {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: end;
+      }
+      .search-actions { margin-top: 0; }
+    }
+
+    @media (max-width: 430px) {
+      .brand { font-size: 17px; }
+      .gps-status { font-size: 10px; padding: 7px 8px; }
+      .input-row { flex-direction: column; }
+      .input-row .button { width: 100%; }
+      .map-shell { height: 39vh; min-height: 275px; }
+      .result-title { font-size: 19px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header class="header">
+      <div class="logo">T</div>
+      <div>
+        <div class="brand">TEMPO GPS</div>
+        <div class="tagline">Chaque minute compte.</div>
+      </div>
+      <div class="gps-status" id="gpsStatus">GPS non activé</div>
+    </header>
+
+    <section class="search-panel">
+      <label class="label" for="destination">Où veux-tu aller ?</label>
+
+      <form id="searchForm">
+        <div class="input-row">
+          <input
+            id="destination"
+            type="search"
+            placeholder="Adresse, ville ou lieu…"
+            autocomplete="off"
+            required
+          >
+          <button id="searchButton" class="button primary" type="submit">
+            Rechercher
+          </button>
+        </div>
+      </form>
+
+      <div class="search-actions">
+        <button id="locateButton" class="button secondary" type="button">
+          ◎ Ma position
+        </button>
+        <button id="clearButton" class="button secondary" type="button">
+          Effacer le trajet
+        </button>
+      </div>
+
+      <div id="status" role="status" aria-live="polite"></div>
+      <div id="places" class="places"></div>
+    </section>
+
+    <section class="map-shell" aria-label="Carte de navigation">
+      <div id="map"></div>
+      <button id="centerButton" class="map-button" type="button">
+        Recentrer
+      </button>
+    </section>
+
+    <section id="results" class="results">
+      <div class="result-heading">
+        <div>
+          <div class="eyebrow">Itinéraire recommandé</div>
+          <div class="result-title">Le plus rapide</div>
+        </div>
+        <div class="badge">TEMPS MINIMAL</div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div id="duration" class="metric-value">—</div>
+          <div class="metric-label">Durée estimée</div>
+        </div>
+        <div class="metric">
+          <div id="distance" class="metric-value">—</div>
+          <div class="metric-label">Distance</div>
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">Heure d'arrivée estimée</div>
+        <div id="arrival" style="font-size:20px;font-weight:850;margin-top:5px">—</div>
+      </div>
+
+      <div>
+        <div class="eyebrow" style="margin-bottom:9px">Autres itinéraires disponibles</div>
+        <div id="routeOptions" class="places"></div>
+      </div>
+
+      <button id="navigateButton" class="button primary launch-button" type="button">
+        Lancer la navigation →
+      </button>
+
+      <div class="disclaimer">
+        La durée est une estimation calculée par le service de routage ; elle ne
+        tient pas compte du trafic en temps réel. « Lancer la navigation » ouvre
+        Apple Plans sur iPhone ou Google Maps sur les autres appareils. Le service
+        de navigation externe peut recalculer son propre itinéraire.
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>TEMPO GPS · VERSION DE TEST</span>
+      <span>
+        Cartes © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
+        · Itinéraires OSRM · Recherche Photon
+      </span>
+    </footer>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    "use strict";
+
+    /*
+      TEMPO GPS — prototype web mobile.
+      Géocodage : Photon (serveur public de démonstration).
+      Carte : OpenStreetMap.
+      Itinéraires : serveur de démonstration OSRM.
+
+      Ces services publics n'offrent aucune disponibilité garantie.
+      Pour une application à grande échelle, il faudra choisir des fournisseurs
+      adaptés et vérifier leurs conditions, quotas et coûts.
+    */
+
+    const $ = (id) => document.getElementById(id);
+
+    const map = L.map("map", {
+      zoomControl: true,
+      preferCanvas: true
+    }).setView([46.6, 2.4], 6);
+
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>'
+    }).addTo(map);
+
+    const routeLayer = L.layerGroup().addTo(map);
+    const markerLayer = L.layerGroup().addTo(map);
+
+    let currentPosition = null;
+    let destinationPoint = null;
+    let routes = [];
+    let selectedRouteIndex = 0;
+    let busy = false;
+
+    function setStatus(message, isError = false) {
+      const el = $("status");
+      el.textContent = message || "";
+      el.classList.toggle("visible", Boolean(message));
+      el.classList.toggle("error", isError);
+    }
+
+    function setBusy(value) {
+      busy = value;
+      $("searchButton").disabled = value;
+      $("searchButton").textContent = value ? "Recherche…" : "Rechercher";
+    }
+
+    function formatDuration(seconds) {
+      const minutes = Math.max(1, Math.round(seconds / 60));
+      if (minutes < 60) return minutes + " min";
+
+      const hours = Math.floor(minutes / 60);
+      const remaining = minutes % 60;
+      return remaining ? hours + " h " + remaining + " min" : hours + " h";
+    }
+
+    function formatDistance(meters) {
+      if (meters >= 1000) {
+        return (meters / 1000).toLocaleString("fr-FR", {
+          maximumFractionDigits: 1
+        }) + " km";
+      }
+      return Math.round(meters) + " m";
+    }
+
+    function estimatedArrival(seconds) {
+      const time = new Date(Date.now() + seconds * 1000);
+      return time.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function makePlaceLabel(properties = {}) {
+      const street = [properties.housenumber, properties.street]
+        .filter(Boolean).join(" ");
+
+      const first = properties.name || street ||
+        properties.locality || properties.city ||
+        properties.district || properties.county ||
+        properties.state || properties.country || "Lieu";
+
+      const details = [
+        first,
+        properties.postcode,
+        properties.city,
+        properties.state,
+        properties.country
+      ].filter(Boolean);
+
+      return [...new Set(details)].join(", ");
+    }
+
+    async function getMyPosition() {
+      if (currentPosition) return currentPosition;
+
+      if (!navigator.geolocation) {
+        throw new Error("La géolocalisation n'est pas disponible sur ce navigateur.");
+      }
+
+      setStatus("Recherche de ta position GPS…");
+
+      const coords = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => resolve({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          }),
+          (error) => {
+            const messages = {
+              1: "Autorise la localisation dans les réglages de ton navigateur.",
+              2: "Ta position GPS est actuellement indisponible.",
+              3: "La recherche GPS a pris trop de temps. Réessaie."
+            };
+            reject(new Error(messages[error.code] || "Impossible de récupérer ta position."));
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 10000
+          }
+        );
+      });
+
+      currentPosition = coords;
+      $("gpsStatus").textContent = "GPS actif";
+      renderMarkers();
+
+      map.setView([coords.lat, coords.lon], 14);
+      setStatus("Position récupérée.");
+
+      return coords;
+    }
+
+    function renderMarkers() {
+      markerLayer.clearLayers();
+
+      if (currentPosition) {
+        L.circleMarker([currentPosition.lat, currentPosition.lon], {
+          radius: 8,
+          color: "#ffffff",
+          weight: 3,
+          fillColor: "#1976ff",
+          fillOpacity: 1
+        }).bindPopup("Ma position").addTo(markerLayer);
+      }
+
+      if (destinationPoint) {
+        L.marker([destinationPoint.lat, destinationPoint.lon])
+          .bindPopup(destinationPoint.label || "Destination")
+          .addTo(markerLayer);
+      }
+    }
+
+    function clearRouteLayers() {
+      routeLayer.clearLayers();
+    }
+
+    function clearResults() {
+      routes = [];
+      selectedRouteIndex = 0;
+      destinationPoint = null;
+      clearRouteLayers();
+      markerLayer.clearLayers();
+      $("results").classList.remove("visible");
+      $("routeOptions").replaceChildren();
+      $("places").replaceChildren();
+
+      if (currentPosition) {
+        renderMarkers();
+        map.setView([currentPosition.lat, currentPosition.lon], 14);
+      }
+    }
+
+    function drawRoutes() {
+      clearRouteLayers();
+
+      routes.forEach((route, index) => {
+        const selected = index === selectedRouteIndex;
+
+        const layer = L.geoJSON(route.geometry, {
+          style: {
+            color: selected ? "#32e6a2" : "#7197d2",
+            weight: selected ? 7 : 4,
+            opacity: selected ? 1 : 0.75,
+            lineCap: "round",
+            lineJoin: "round"
+          }
+        }).addTo(routeLayer);
+
+        layer.on("click", () => chooseRoute(index));
+      });
+
+      renderMarkers();
+
+      const chosen = routes[selectedRouteIndex];
+      if (chosen) {
+        const bounds = L.geoJSON(chosen.geometry).getBounds();
+        if (bounds.isValid()) {
+          map.fitBounds(bounds, {
+            padding: [35, 35],
+            maxZoom: 16
+          });
+        }
+      }
+
+      map.invalidateSize();
+    }
+
+    function renderRoutePanel() {
+      const route = routes[selectedRouteIndex];
+      if (!route) return;
+
+      $("duration").textContent = formatDuration(route.duration);
+      $("distance").textContent = formatDistance(route.distance);
+      $("arrival").textContent = estimatedArrival(route.duration);
+      $("results").classList.add("visible");
+
+      const container = $("routeOptions");
+      container.replaceChildren();
+
+      routes.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "route-option" +
+          (index === selectedRouteIndex ? " selected" : "");
+
+        const left = document.createElement("div");
+        const name = document.createElement("div");
+        name.className = "route-option-name";
+        name.textContent = index === 0
+          ? "Le plus rapide"
+          : "Alternative " + (index + 1);
+
+        const detail = document.createElement("div");
+        detail.className = "route-option-detail";
+        detail.textContent = formatDistance(option.distance);
+
+        const time = document.createElement("div");
+        time.className = "route-option-time";
+        time.textContent = formatDuration(option.duration);
+
+        left.append(name, detail);
+        button.append(left, time);
+        button.addEventListener("click", () => chooseRoute(index));
+        container.appendChild(button);
+      });
+    }
+
+    function chooseRoute(index) {
+      if (!routes[index]) return;
+      selectedRouteIndex = index;
+      drawRoutes();
+      renderRoutePanel();
+    }
+
+    async function findPlaces(query) {
+      const params = new URLSearchParams({
+        q: query,
+        limit: "5",
+        lang: "fr"
+      });
+
+      if (currentPosition) {
+        params.set("lat", String(currentPosition.lat));
+        params.set("lon", String(currentPosition.lon));
+      }
+
+      const response = await fetch(
+        "https://photon.komoot.io/api/?" + params.toString()
+      );
+
+      if (!response.ok) {
+        throw new Error("Le service de recherche de lieux ne répond pas.");
+      }
+
+      const data = await response.json();
+      return data.features || [];
+    }
+
+    function showPlaceChoices(features) {
+      const container = $("places");
+      container.replaceChildren();
+
+      if (!features.length) {
+        setStatus("Aucun lieu trouvé. Essaie une adresse ou une ville plus précise.", true);
+        return;
+      }
+
+      setStatus("Choisis la destination qui correspond à ta recherche.");
+
+      features.forEach((feature) => {
+        const coordinates = feature.geometry?.coordinates;
+        if (!coordinates || coordinates.length < 2) return;
+
+        const properties = feature.properties || {};
+        const label = makePlaceLabel(properties);
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "place-option";
+
+        const title = document.createElement("div");
+        title.className = "place-name";
+        title.textContent = properties.name || label;
+
+        const detail = document.createElement("div");
+        detail.className = "place-detail";
+        detail.textContent = label;
+
+        button.append(title, detail);
+
+        button.addEventListener("click", async () => {
+          container.replaceChildren();
+
+          destinationPoint = {
+            lon: Number(coordinates[0]),
+            lat: Number(coordinates[1]),
+            label
+          };
+
+          $("destination").value = label;
+
+          try {
+            await calculateRoutes();
+          } catch (error) {
+            setStatus(error.message || "Impossible de calculer le trajet.", true);
+          }
+        });
+
+        container.appendChild(button);
+      });
+    }
+
+    async function calculateRoutes() {
+      setBusy(true);
+      $("places").replaceChildren();
+
+      try {
+        const origin = await getMyPosition();
+        const destination = destinationPoint;
+
+        if (!destination) {
+          throw new Error("Choisis d'abord une destination.");
+        }
+
+        setStatus("Calcul du trajet le plus rapide…");
+
+        const coordinates =
+          origin.lon + "," + origin.lat + ";" +
+          destination.lon + "," + destination.lat;
+
+        const url =
+          "https://router.project-osrm.org/route/v1/driving/" +
+          coordinates +
+          "?alternatives=true&overview=full&geometries=geojson&steps=true";
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error("Le service de calcul d'itinéraire ne répond pas.");
+        }
+
+        const data = await response.json();
+
+        if (data.code !== "Ok" || !data.routes || !data.routes.length) {
+          throw new Error("Aucun itinéraire routier n'a été trouvé.");
+        }
+
+        routes = data.routes
+          .filter((route) => route.geometry && route.distance != null)
+          .sort((a, b) => a.duration - b.duration);
+
+        if (!routes.length) {
+          throw new Error("Le service n'a pas retourné de trajet exploitable.");
+        }
+
+        selectedRouteIndex = 0;
+        drawRoutes();
+        renderRoutePanel();
+
+        setStatus(
+          "Itinéraire calculé. " +
+          "La première option est celle dont la durée estimée est la plus courte."
+        );
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    $("searchForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (busy) return;
+
+      const query = $("destination").value.trim();
+      if (!query) {
+        setStatus("Saisis une destination.", true);
+        return;
+      }
+
+      try {
+        setBusy(true);
+        clearRouteLayers();
+        routes = [];
+        destinationPoint = null;
+        $("results").classList.remove("visible");
+        $("routeOptions").replaceChildren();
+        setStatus("Recherche de la destination…");
+
+        // Recherche uniquement après action de l'utilisateur, sans autocomplétion.
+        const features = await findPlaces(query);
+        showPlaceChoices(features);
+      } catch (error) {
+        setStatus(error.message || "La recherche a échoué.", true);
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    $("locateButton").addEventListener("click", async () => {
+      try {
+        await getMyPosition();
+        if (currentPosition) {
+          map.setView([currentPosition.lat, currentPosition.lon], 15);
+        }
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    });
+
+    $("centerButton").addEventListener("click", () => {
+      if (routes.length) {
+        drawRoutes();
+      } else if (currentPosition) {
+        map.setView([currentPosition.lat, currentPosition.lon], 15);
+      } else {
+        map.setView([46.6, 2.4], 6);
+      }
+    });
+
+    $("clearButton").addEventListener("click", () => {
+      $("destination").value = "";
+      clearRoute();
+      setStatus("Trajet effacé.");
+    });
+
+    function clearRoute() {
+      destinationPoint = null;
+      routes = [];
+      selectedRouteIndex = 0;
+      clearRouteLayers();
+      markerLayer.clearLayers();
+      $("places").replaceChildren();
+      $("routeOptions").replaceChildren();
+      $("results").classList.remove("visible");
+
+      if (currentPosition) {
+        renderMarkers();
+        map.setView([currentPosition.lat, currentPosition.lon], 14);
+      }
+    }
+
+    $("navigateButton").addEventListener("click", () => {
+      if (!destinationPoint || !currentPosition) {
+        setStatus("Détermine une position et une destination avant de naviguer.", true);
+        return;
+      }
+
+      const destination = destinationPoint.lat + "," + destinationPoint.lon;
+      const origin = currentPosition.lat + "," + currentPosition.lon;
+      const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      const url = isApple
+        ? "https://maps.apple.com/?saddr=" + encodeURIComponent(origin) +
+          "&daddr=" + encodeURIComponent(destination) + "&dirflg=d"
+        : "https://www.google.com/maps/dir/?api=1&origin=" +
+          encodeURIComponent(origin) +
+          "&destination=" + encodeURIComponent(destination) +
+          "&travelmode=driving";
+
+      window.location.href = url;
+    });
+
+    // Permet à Leaflet de recalculer la taille après l'affichage.
+    window.addEventListener("load", () => {
+      setTimeout(() => map.invalidateSize(), 250);
+    });
+
+    window.addEventListener("resize", () => map.invalidateSize());
+  </script>
+</body>
+</html>
