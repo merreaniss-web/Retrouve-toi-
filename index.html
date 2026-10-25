@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#080d13">
-<meta name="description" content="TEMPO GPS — navigation routière immersive avec guidage vocal.">
+<meta name="description" content="TEMPO GPS — navigation routière, trajets récents et zones de vigilance.">
 <title>TEMPO GPS — Street Drive</title>
 <link href="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.css" rel="stylesheet">
 <style>
@@ -23,21 +23,59 @@
 @media(max-width:390px){.brand-sub{display:none}.brand-pill{padding:7px 9px}.brand-mark{width:27px;height:27px}.top-action{padding:8px 10px}.sheet{left:5px;right:5px;bottom:calc(5px + var(--safe-bottom));border-radius:24px}.sheet.collapsed{max-height:178px}.maneuver-text{font-size:14px}.speed-circle{width:51px;height:51px;flex-basis:51px}.drive-summary{padding-left:10px;padding-right:10px}.summary-item{padding:8px}.summary-item strong{font-size:13px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* TEMPO GPS — interface épurée inspirée des apps de navigation */
-.topbar{left:14px;right:14px;top:max(12px,env(safe-area-inset-top));}
-.brand-pill{padding:8px 10px;border-radius:16px}.brand-sub{display:none}.brand-name{font-size:11px}
-.map-controls{left:14px;right:auto;top:calc(max(14px,env(safe-area-inset-top)) + 62px);transform:none;gap:10px}
-.map-control{width:46px;height:46px;min-width:46px;padding:0;border-radius:50%;font-size:0;display:grid;place-items:center;background:rgba(4,7,12,.88);border:1px solid #ffffff14}
-#centerButton:before{content:"◎";font-size:24px}#tiltButton:before{content:"⌁";font-size:24px}#styleButton:before{content:"◐";font-size:22px}#pointerButton:before{content:"➤";font-size:21px}
-#centerButton{position:fixed;left:14px;bottom:calc(205px + var(--safe-bottom));top:auto}
-#tiltButton,#styleButton,#pointerButton{display:none}
-#status{top:calc(max(12px,env(safe-area-inset-top)) + 55px);left:72px;right:12px;font-size:12px}
-.sheet{left:0;right:0;bottom:0;max-height:58dvh;border-radius:28px 28px 0 0;border-left:0;border-right:0;border-bottom:0;background:rgba(25,27,31,.97);padding-bottom:var(--safe-bottom)}
-.sheet.collapsed{max-height:174px}.sheet-handle-area{min-height:26px;padding:8px 14px 5px}.sheet-topline{display:none}.handle{width:42px;height:4px;background:#85888e;margin:0 auto 9px}
-.sheet-scroll{padding:0 16px 18px}.section-title{display:none}.search-row{gap:0;position:relative}.search-input{height:58px;border-radius:32px;background:#3a3d42;border:0;padding:0 52px 0 52px;font-size:16px;font-weight:650}.search-input::placeholder{color:#b7bac0}.btn-primary#searchButton{width:42px;min-width:42px;height:42px;min-height:42px;padding:0;border-radius:50%;font-size:0;background:transparent;color:#f5f7fa;margin-left:-48px;z-index:2}.btn-primary#searchButton:after{content:"↗";font-size:22px}.quick-row{grid-template-columns:1fr 1fr;margin-top:10px}.quick-row .btn{border-radius:14px;min-height:40px;font-size:11px}.places{max-height:20vh}.recent-block{margin-top:13px}.recent-heading{display:flex;justify-content:space-between;align-items:center;margin:0 2px 8px;font-size:13px;font-weight:850}.recent-clear{border:0;background:transparent;color:#9bcfff;font-size:11px}.recent-list{display:grid;gap:6px}.recent-item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 11px;border:0;border-radius:14px;background:#ffffff08;color:#f2f5f8;text-align:left}.recent-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#ffffff0d;font-size:17px;flex:0 0 34px}.recent-copy{min-width:0;flex:1}.recent-copy strong{display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.recent-copy small{display:block;color:#9ca6b1;font-size:10px;margin-top:3px}.recent-arrow{color:#8f9ba7;font-size:17px}.sheet.collapsed .recent-block,.sheet.collapsed .quick-row{display:none}
-#driveSheet{bottom:0;border-radius:25px 25px 0 0;background:rgba(25,27,31,.97)}
-.drive-handle .sheet-topline{display:flex}.drive-handle .sheet-eyebrow{display:none}.drive-handle .sheet-state{margin:auto;font-size:9px}.drive-top{padding-top:3px}.drive-note{font-size:10px}
-@media(min-width:700px){.sheet{left:16px;right:auto;bottom:16px;width:390px;border-radius:26px;max-height:80dvh}.sheet.collapsed{max-height:174px}#driveSheet{left:16px;right:auto;width:390px;bottom:16px;border-radius:26px}}
+/* TEMPO GPS — interface épurée inspirée des applications de navigation */
+.topbar{left:18px;right:18px;top:max(18px,env(safe-area-inset-top));align-items:center}
+.menu-button{pointer-events:auto;position:relative;width:58px;height:58px;border:0;border-radius:20px;background:rgba(12,16,23,.88);box-shadow:0 5px 20px #0005;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 17px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.menu-button span{display:block;height:3px;width:24px;border-radius:3px;background:#f3f7fc}.menu-button i{position:absolute;right:13px;top:12px;width:9px;height:9px;border-radius:50%;background:#ff7189;box-shadow:0 0 0 3px #ff718920}
+.top-action{border-radius:22px;min-height:38px;padding:8px 12px;background:#080d13c9}
+.map-controls{left:18px;right:auto;top:94px;transform:none;opacity:0;pointer-events:none;transition:opacity .18s ease;gap:7px}.map-controls.open{opacity:1;pointer-events:auto}
+.map-control{height:40px;border-radius:20px;padding:0 14px;background:#090d14ed}
+#centerButton{position:absolute;z-index:11;left:22px;right:auto;top:auto;bottom:calc(168px + var(--safe-bottom));width:58px;height:58px;min-width:58px;padding:0;border-radius:50%;font-size:21px;background:#080d13eF;box-shadow:0 4px 20px #0007}
+.sheet{left:0;right:0;bottom:0;max-height:calc(91dvh - var(--safe-bottom));border:0;border-top:1px solid #ffffff14;border-radius:30px 30px 0 0;background:rgba(26,28,32,.97);box-shadow:0 -8px 35px #0003;backdrop-filter:blur(25px) saturate(130%);-webkit-backdrop-filter:blur(25px) saturate(130%);padding-bottom:var(--safe-bottom)}
+.sheet.collapsed{max-height:128px}
+.sheet-handle-area{min-height:29px;padding:10px 15px 4px}.handle{width:46px;height:5px;background:#73767b;margin:0 auto 0}.sheet-topline{display:none}
+.sheet-scroll{padding:0 16px 14px}.sheet.collapsed .sheet-scroll{overflow:hidden;padding-bottom:8px}
+.section-title{display:none}
+.search-row{position:relative;align-items:center;gap:0;padding:0 8px 0 14px;border:1px solid #ffffff08;border-radius:34px;background:#3a3d42;min-height:58px}
+.search-glyph{font-size:31px;line-height:1;color:#9ba0a7;width:34px;flex:0 0 34px;text-align:center;font-weight:300}
+.search-input{height:54px;border:0!important;border-radius:0!important;background:transparent!important;padding:0 10px!important;font-size:16px!important;font-weight:650;color:#fff}
+.search-input::placeholder{color:#c0c2c6;opacity:1}
+.voice-search{flex:0 0 36px;width:36px;height:42px;border:0;background:transparent;color:#f7f8fa;font-size:20px;border-radius:50%}
+.search-submit{flex:0 0 42px;width:42px;height:42px;border:0;border-radius:50%;background:#e8f8ff;color:#09202c;font-size:24px;font-weight:900;display:none}
+.sheet:not(.collapsed) .search-submit{display:block}
+.quick-row{grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:12px}
+.quick-row .btn{border-radius:15px;min-height:40px;font-size:11px}
+.sheet.collapsed .quick-row,.sheet.collapsed #places,.sheet.collapsed #recentRoutes,.sheet.collapsed #routeResults{display:none!important}
+.sheet:not(.collapsed) .section-title{display:block;font-size:16px;margin:3px 0 10px}
+#status{top:calc(max(84px,env(safe-area-inset-top) + 68px));left:15px;right:15px;width:auto;max-width:none;border-radius:14px;font-size:12px}
+.pointer-settings{z-index:40}
+.recent-routes{margin-top:13px;padding-top:4px}.recent-heading{display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px;font-size:13px;font-weight:900}.recent-clear{border:0;background:transparent;color:#9edcff;font-size:11px;padding:6px}.recent-list{display:grid;gap:7px}.recent-entry{display:flex;align-items:stretch;gap:7px}.recent-item{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;padding:11px 12px;border:1px solid #ffffff0e;border-radius:14px;background:#ffffff06;color:#f4f7fa}.recent-icon{flex:0 0 35px;width:35px;height:35px;border-radius:11px;background:#91dcff16;display:grid;place-items:center;color:#a5e2ff;font-size:19px}.recent-copy{min-width:0;flex:1}.recent-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800}.recent-meta{display:block;margin-top:4px;color:#9da9b7;font-size:10px}.recent-delete{width:40px;flex:0 0 40px;border:1px solid #ffffff0b;border-radius:13px;background:#ffffff05;color:#9ba9b8;font-size:18px}
+#driveSheet{left:0;right:0;bottom:0;border-radius:28px 28px 0 0;background:rgba(24,27,32,.97)}
+@media(max-width:390px){.menu-button{width:52px;height:52px}.top-action{padding:7px 9px}.search-input{font-size:15px!important}.quick-row .btn{font-size:10px;padding:8px 5px}}
+
+
+/* Navigation refresh: compact Waze-inspired controls, without removing marker personalization. */
+:root{--blue:#8be4ff;--blue2:#39bdf4;--panel:rgba(19,22,27,.97)}
+.topbar{top:max(12px,env(safe-area-inset-top));left:14px;right:14px}
+.brand-pill{background:#111820df;border-radius:18px}
+.map-controls{top:calc(max(82px,env(safe-area-inset-top) + 70px));left:14px;right:auto;transform:none;max-width:calc(100vw - 28px);}
+.map-controls.open{display:flex;flex-direction:column;align-items:flex-start}
+.map-control{width:max-content;max-width:100%;min-height:40px;border-radius:18px;padding:0 14px;background:rgba(9,14,21,.94);font-size:11px;box-shadow:0 4px 18px #0005}
+#centerButton{bottom:calc(153px + var(--safe-bottom));left:18px;width:54px;height:54px;min-width:54px;border:1px solid #ffffff20;background:#080d13ee;color:#f5faff}
+.sheet{max-height:calc(91dvh - var(--safe-bottom));background:rgba(29,31,35,.98);border-top:1px solid #ffffff12;}
+.sheet.collapsed{max-height:121px}
+.sheet-handle-area{min-height:28px;padding:9px 15px 4px}
+.search-row{min-height:58px;border-radius:33px;background:#3b3e43;border-color:#ffffff08;padding-left:14px}
+.search-input{font-size:16px!important}
+.quick-row .btn{min-height:38px;border-radius:14px}
+.pointer-settings{top:calc(max(75px,env(safe-area-inset-top) + 64px));right:14px}
+.recent-routes{margin-top:15px}
+.recent-item{min-height:56px}
+#driveSheet.collapsed{max-height:144px}
+#driveSheet .drive-top{padding-top:2px}
+.maplibregl-ctrl-bottom-right{bottom:calc(145px + var(--safe-bottom))!important;right:8px!important}
+.danger-legend{font-size:9px;color:#b7c4d2;line-height:1.4;margin-top:7px}
+@media(max-width:390px){.map-control{min-height:38px;font-size:10px}.pointer-settings{width:min(270px,calc(100vw - 28px))}}
 
 </style>
 </head>
@@ -45,11 +83,11 @@
 <main id="app">
 <div id="map" aria-label="Carte routière immersive"></div><div class="map-shade"></div>
 <header class="topbar">
-  <div class="brand-pill"><div class="brand-mark">↗</div><div><div class="brand-name">TEMPO GPS</div><div class="brand-sub">Street drive · navigation</div></div></div>
-  <button class="top-action" id="gpsButton" type="button"><span id="gpsStatus">GPS non activé</span></button>
+  <button class="menu-button" id="menuButton" type="button" aria-label="Ouvrir les outils de la carte"><span></span><span></span><span></span><i></i></button>
+  <button class="top-action" id="gpsButton" type="button" aria-label="Actualiser le GPS"><span id="gpsStatus">GPS non activé</span></button>
 </header>
 <div id="status" role="status" aria-live="polite"></div>
-<div class="map-controls"><button class="map-control" id="centerButton" type="button">◎ Recentrer</button><button class="map-control" id="tiltButton" type="button">▱ Vue route</button><button class="map-control" id="styleButton" type="button">◐ Style</button><button class="map-control" id="pointerButton" type="button">➤ Pointeur</button></div>
+<button class="map-control" id="centerButton" type="button" aria-label="Recentrer la carte">◎</button><div class="map-controls" id="mapControls"><button class="map-control" id="tiltButton" type="button">▤ Vue du dessus</button><button class="map-control" id="styleButton" type="button">◐ Style</button><button class="map-control" id="pointerButton" type="button">➤ Pointeur</button><button class="map-control" id="dangerToggleButton" type="button" aria-pressed="true" title="Zones regroupées depuis le registre national des radars fixes">⚠ Vigilance : ON</button></div>
 <div class="pointer-settings" id="pointerSettings" aria-label="Personnaliser le pointeur de position">
   <h3>Personnaliser ma position</h3><p>Choisis le symbole, sa couleur et sa taille. Tes préférences sont conservées sur cet appareil.</p>
   <div class="pointer-options"><button class="pointer-option active" data-pointer-style="arrow" type="button">➤ Flèche</button><button class="pointer-option" data-pointer-style="car" type="button">▰ Voiture</button><button class="pointer-option" data-pointer-style="dot" type="button">● Point</button></div>
@@ -58,13 +96,13 @@
   <button class="settings-close" id="pointerClose" type="button">Terminé</button>
 </div>
 
-<section class="sheet" id="plannerSheet" aria-label="Recherche et choix de l’itinéraire">
+<section class="sheet collapsed" id="plannerSheet" aria-label="Recherche et choix de l’itinéraire">
   <div class="sheet-handle-area" id="plannerHandle"><div class="handle"></div><div class="sheet-topline"><span class="sheet-eyebrow">TEMPO / DESTINATION</span><span class="sheet-state">GLISSER POUR OUVRIR / FERMER</span></div></div>
   <div class="sheet-scroll" id="plannerContent">
     <div class="section-title">Où va-t-on ?</div>
-    <form id="searchForm"><div class="search-row"><input id="destination" class="search-input" type="search" placeholder="Adresse, ville, lieu…" autocomplete="off" required><button class="btn btn-primary" id="searchButton" type="submit">Chercher ↗</button></div></form>
-    <div class="quick-row"><button class="btn btn-secondary" id="locateButton" type="button">◎ Ma position</button><button class="btn btn-secondary" id="clearButton" type="button">Effacer le trajet</button></div>
-    <div class="recent-block" id="recentBlock"><div class="recent-heading"><span>Trajets récents</span><button class="recent-clear" id="clearRecentButton" type="button">Effacer</button></div><div class="recent-list" id="recentList"></div></div>
+    <form id="searchForm"><div class="search-row"><span class="search-glyph" aria-hidden="true">⌕</span><input id="destination" class="search-input" type="search" placeholder="Où va-t-on ?" autocomplete="off" required><button class="voice-search" id="voiceSearchButton" type="button" aria-label="Dicter une destination">🎙</button><button class="search-submit" id="searchButton" type="submit" aria-label="Rechercher">➜</button></div></form>
+    <div class="quick-row"><button class="btn btn-secondary" id="locateButton" type="button">◎ Ma position</button><button class="btn btn-secondary" id="recentToggleButton" type="button">◷ Récents</button><button class="btn btn-secondary" id="clearButton" type="button">Effacer</button></div>
+    <div id="recentRoutes" class="recent-routes" hidden></div>
     <div id="places" class="places"></div>
     <div id="routeResults" hidden>
       <div class="route-head"><div><div class="sheet-eyebrow">ROUTE PLANNER</div><h2>Choisis ton trajet</h2></div><div class="chip">ESTIMATIONS</div></div>
@@ -72,7 +110,7 @@
       <div id="routeOptions" class="route-list"></div>
       <button class="step-toggle" id="stepsToggle" type="button" aria-expanded="false">⌄ Afficher les étapes détaillées</button>
       <div class="steps-box"><div id="routeSteps" class="steps"></div></div>
-      <div class="traffic-box"><div class="traffic-title" id="trafficTitle">Trafic en direct non connecté</div><div class="traffic-note" id="trafficNote">Les temps sont théoriques et ne reflètent pas les bouchons en temps réel.</div><div class="traffic-note" id="trafficComplexity"></div></div>
+      <div class="traffic-box"><div class="traffic-title" id="trafficTitle">Trafic en direct non connecté</div><div class="traffic-note" id="trafficNote">Les données de circulation publiques sont indicatives et incomplètes. Aucun bouchon n’est inventé.</div><div class="traffic-note" id="trafficComplexity">Chargement des zones de vigilance et du flux routier public…</div></div>
       <div class="inline-actions"><button class="btn btn-primary" id="startButton" type="button">Démarrer le guidage</button><button class="btn btn-secondary" id="collapsePlannerButton" type="button">Réduire le menu</button></div>
     </div>
   </div>
@@ -93,9 +131,9 @@
   <div class="drive-expanded" id="driveExpanded">
     <div class="speed-limit-row"><div class="limit-sign unknown" id="limitSign">?</div><div><div class="limit-text" id="limitText">Limitation inconnue</div><div class="limit-source" id="limitSource">Recherche de données OpenStreetMap</div></div></div>
     <div id="speedWarning" class="warning" role="status" aria-live="polite">Attention à la vitesse.</div>
-    <div class="traffic-box"><div class="traffic-title">État des données routières</div><div class="traffic-note" id="driveTrafficNote">Pas de fournisseur de trafic en direct connecté. Les incidents ne sont pas inventés.</div></div>
+    <div class="traffic-box"><div class="traffic-title">Circulation & vigilance</div><div class="traffic-note" id="driveTrafficNote">Les données publiques peuvent être incomplètes. Respecte toujours les panneaux et les feux.</div></div>
     <div class="drive-buttons"><button class="btn btn-secondary" id="voiceButton" type="button">🔊 Voix activée</button><button class="btn btn-secondary" id="stopButton" type="button">■ Arrêter</button></div>
-    <div class="drive-note">La vitesse GPS et la limitation cartographique sont indicatives. Respecte toujours la signalisation. Garde la page ouverte pendant le guidage.</div>
+    <div class="drive-note">La vitesse GPS et la limitation cartographique sont indicatives. Respecte toujours la signalisation. Garde TEMPO GPS ouvert pendant le guidage.</div>
   </div>
 </section>
 </main>
@@ -103,11 +141,110 @@
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
+let screenWakeLock=null;
 let mapReady=false,darkStyle=true,tilted=false,currentPosition=null,destinationPoint=null,routes=[],selectedRouteIndex=0,busy=false,navigationActive=false,navigationWatchId=null,navigationRoute=null,navigationSteps=[],stepStarts=[],geometryCoordinates=[],geometryCumulative=[],navigationProgress=0,followUser=false,voiceEnabled=true,rerouteInProgress=false,offRouteSamples=0,lastRerouteAt=0,announcedApproaches=new Set(),lastStepSpoken=-1,lastPositionForSpeed=null,speedLimitValue=null,lastSpeedLimitQuery=0,speedLimitQueryInProgress=false,overspeedSamples=0,carMarker=null,destinationMarker=null,routeFeatureCollection={type:"FeatureCollection",features:[]},heading=0,markerStyle="arrow",markerColor="#52c7ff",markerSize=1,markerAnimationFrame=0,displayedMarkerPoint=null,displayedMarkerHeading=0;
 const map=new maplibregl.Map({container:"map",style:"https://tiles.openfreemap.org/styles/liberty",center:[2.3522,48.8566],zoom:5,pitch:0,bearing:0,antialias:true,attributionControl:true,dragRotate:true,touchPitch:true});
 map.addControl(new maplibregl.NavigationControl({showCompass:false,showZoom:false,visualizePitch:false}),"bottom-right");
-function addRouteLayers(){if(!map.getSource("tempo-routes"))map.addSource("tempo-routes",{type:"geojson",data:routeFeatureCollection});if(map.getLayer("tempo-route-main"))return;map.addLayer({id:"tempo-route-halo",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#31baff","line-width":19,"line-opacity":.22,"line-blur":5}});map.addLayer({id:"tempo-route-casing",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#06111d","line-width":13,"line-opacity":.96}});map.addLayer({id:"tempo-route-main",type:"line",source:"tempo-routes",layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":["case",["==",["get","selected"],true],"#40bdff","#71879b"],"line-width":["interpolate",["linear"],["zoom"],5,3,12,5,17,8],"line-opacity":["case",["==",["get","selected"],true],1,.58]}});map.addLayer({id:"tempo-route-core",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#d9f5ff","line-width":2,"line-opacity":.88}});}
-map.on("load",()=>{mapReady=true;addRouteLayers();map.resize();loadPointerSettings();});
+function addRouteLayers(){
+  if(!map.getSource("tempo-routes"))map.addSource("tempo-routes",{type:"geojson",data:routeFeatureCollection});
+  if(!map.getLayer("tempo-route-main")){
+    map.addLayer({id:"tempo-route-halo",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#31baff","line-width":19,"line-opacity":.22,"line-blur":5}});
+    map.addLayer({id:"tempo-route-casing",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#06121d","line-width":13,"line-opacity":.96}});
+    map.addLayer({id:"tempo-route-main",type:"line",source:"tempo-routes",layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":["case",["==",["get","selected"],true],"#40bdff","#71879b"],"line-width":["interpolate",["linear"],["zoom"],5,3,12,5,17,8],"line-opacity":["case",["==",["get","selected"],true],1,.58]}});
+    map.addLayer({id:"tempo-route-core",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#e3f8ff","line-width":2,"line-opacity":.92}});
+  }
+  addDangerLayers();
+  addCongestionLayers();
+  ["tempo-route-halo","tempo-route-casing","tempo-route-main","tempo-route-core"].forEach(id=>{if(map.getLayer(id))map.moveLayer(id);});
+}
+const DANGER_DATA_URL="https://www.data.gouv.fr/api/1/datasets/r/17f7cfd9-a5fe-4b6a-9f5d-3625feaa396e";
+const TRAFFIC_FEED_URL="https://transport.data.gouv.fr/resources/79166/download";
+const DANGER_CACHE_KEY="tempoGpsDangerZonesOfficialV1";
+let dangerZoneFeatures=[],dangerZonesEnabled=true,congestionFeatures=[],dangerLoadSource="",lastDangerAlertAt=0,alertedZoneIds=new Set(),trafficFeedState="pending";
+function addDangerLayers(){
+  if(!mapReady)return;
+  if(!map.getSource("tempo-danger-zones"))map.addSource("tempo-danger-zones",{type:"geojson",data:{type:"FeatureCollection",features:dangerZoneFeatures}});
+  if(!map.getLayer("tempo-danger-fill"))map.addLayer({id:"tempo-danger-fill",type:"fill",source:"tempo-danger-zones",minzoom:8.2,paint:{"fill-color":["match",["get","kind"],"red","#ff596a","mixed","#ffad4f","#48c8ff"],"fill-opacity":.14}});
+  if(!map.getLayer("tempo-danger-outline"))map.addLayer({id:"tempo-danger-outline",type:"line",source:"tempo-danger-zones",minzoom:8.2,layout:{"line-join":"round","line-cap":"round"},paint:{"line-color":["match",["get","kind"],"red","#ff6675","mixed","#ffb65b","#51caff"],"line-opacity":.64,"line-width":1.5}});
+  if(!map.getLayer("tempo-danger-label"))map.addLayer({id:"tempo-danger-label",type:"symbol",source:"tempo-danger-zones",minzoom:10,layout:{"text-field":["match",["get","kind"],"red","FEU","mixed","VIG.","VIT."],"text-font":["Open Sans Bold","Arial Unicode MS Bold"],"text-size":["interpolate",["linear"],["zoom"],10,9,15,12],"text-allow-overlap":false,"text-ignore-placement":false},paint:{"text-color":"#ffffff","text-halo-color":"#101722","text-halo-width":1.5}});
+  const vis=dangerZonesEnabled?"visible":"none";
+  ["tempo-danger-fill","tempo-danger-outline","tempo-danger-label"].forEach(id=>{if(map.getLayer(id))map.setLayoutProperty(id,"visibility",vis);});
+}
+function addCongestionLayers(){
+  if(!mapReady)return;
+  if(!map.getSource("tempo-congestion"))map.addSource("tempo-congestion",{type:"geojson",data:{type:"FeatureCollection",features:congestionFeatures}});
+  if(!map.getLayer("tempo-congestion-points"))map.addLayer({id:"tempo-congestion-points",type:"circle",source:"tempo-congestion",minzoom:9,paint:{"circle-radius":["interpolate",["linear"],["zoom"],9,5,15,10],"circle-color":"#ff654f","circle-opacity":.88,"circle-stroke-color":"#fff0eb","circle-stroke-width":1.5}});
+}
+function setDangerData(features,sourceLabel){
+  dangerZoneFeatures=features||[];dangerLoadSource=sourceLabel||"source inconnu";
+  try{localStorage.setItem(DANGER_CACHE_KEY,JSON.stringify({saved:Date.now(),features:dangerZoneFeatures,source:dangerLoadSource}));}catch(e){}
+  if(mapReady&&map.getSource("tempo-danger-zones"))map.getSource("tempo-danger-zones").setData({type:"FeatureCollection",features:dangerZoneFeatures});
+  updateDataNotes();
+}
+function updateDataNotes(){
+  const n=dangerZoneFeatures.length;
+  const text=n?`${n} zones de vigilance généralisées chargées depuis ${dangerLoadSource}. Les secteurs sont approximatifs, pas des positions exactes.`:"Zones de vigilance indisponibles pour le moment. Réessaie avec une connexion Internet.";
+  const a=$("trafficComplexity");if(a)a.textContent=text+(trafficFeedState==="ready"?(congestionFeatures.length?` ${congestionFeatures.length} points de trafic dense issus du flux public, non exhaustifs.`:" Flux national reçu, mais aucune position de congestion exploitable sur cette carte."):" Le flux de circulation en direct n’est pas disponible pour le moment.");
+  const b=$("driveTrafficNote");if(b)b.textContent=trafficFeedState==="ready"?(congestionFeatures.length?"Le flux public indique des secteurs de trafic dense. Il ne couvre pas chaque feu et reste non exhaustif.":"Flux public reçu, sans position précise de bouchon exploitable."):"Trafic en direct partiel ou indisponible. Aucun bouchon n’est supposé ou inventé.";
+}
+function csvParse(text){
+  text=String(text||"").replace(/^\uFEFF/,"");const first=(text.split(/\r?\n/)[0]||"");const sep=(first.match(/;/g)||[]).length>(first.match(/,/g)||[]).length?";":",";
+  const rows=[];let row=[],cell="",quoted=false;
+  for(let i=0;i<text.length;i++){const ch=text[i];if(ch==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++;}else quoted=!quoted;}else if(ch===sep&&!quoted){row.push(cell);cell="";}else if((ch==="\n"||ch==="\r")&&!quoted){if(ch==="\r"&&text[i+1]==="\n")i++;row.push(cell);if(row.some(v=>String(v).trim()))rows.push(row);row=[];cell="";}else cell+=ch;}
+  if(cell.length||row.length){row.push(cell);if(row.some(v=>String(v).trim()))rows.push(row);}return rows;
+}
+function normKey(v){return String(v||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");}
+function makeCircle(lon,lat,radius=950){const coords=[];const R=6378137,latR=lat*Math.PI/180,lonR=lon*Math.PI/180;for(let i=0;i<=32;i++){const a=2*Math.PI*i/32,lat2=Math.asin(Math.sin(latR)*Math.cos(radius/R)+Math.cos(latR)*Math.sin(radius/R)*Math.cos(a)),lon2=lonR+Math.atan2(Math.sin(a)*Math.sin(radius/R)*Math.cos(latR),Math.cos(radius/R)-Math.sin(latR)*Math.sin(lat2));coords.push([lon2*180/Math.PI,lat2*180/Math.PI]);}return{type:"Polygon",coordinates:[coords]};}
+function parseNationalRadarCSV(text){
+  const rows=csvParse(text);if(rows.length<2)throw new Error("Le fichier national des radars est vide.");
+  const h=rows[0].map(normKey);const find=(names)=>h.findIndex(k=>names.some(n=>k===n||k.includes(n)));
+  const latI=find(["latitude","lat"]),lonI=find(["longitude","lon","long"]),typeI=find(["typeradar","typeradars","type","categorie","category","nature","equipement"]),idI=find(["identifiant","idradar","id"]),roadI=find(["route","emplacement","lieu","commune","localisation"]);
+  if(latI<0||lonI<0)throw new Error("Colonnes de coordonnées introuvables dans le fichier national.");
+  const R=6378137,cellSize=2800,groups=new Map();
+  for(const row of rows.slice(1)){
+    const lat=Number(String(row[latI]||"").replace(",",".")),lon=Number(String(row[lonI]||"").replace(",","."));if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)continue;
+    const type=String(typeI>=0?row[typeI]:"").trim(),t=normKey(type);if(/passageaniveau|etpn|chantier|mobile|embarque/.test(t))continue;
+    const kind=/feurouge|feuxrouges|feutr|etfr|redlight|franchissementdesfeux/.test(t)?"red":"speed";
+    // Generalise locations into ~2.8 km cells; never expose the exact radar coordinate.
+    const x=R*lon*Math.PI/180,y=R*Math.log(Math.tan(Math.PI/4+(lat*Math.PI/180)/2)),ix=Math.floor(x/cellSize),iy=Math.floor(y/cellSize),key=ix+":"+iy;
+    if(!groups.has(key))groups.set(key,{ix,iy,speed:0,red:0,roads:new Set()});const g=groups.get(key);g[kind]++;if(roadI>=0&&row[roadI])g.roads.add(String(row[roadI]).trim());
+  }
+  const features=[];
+  for(const [key,g] of groups){const x=(g.ix+.5)*cellSize,y=(g.iy+.5)*cellSize,lon=x/R*180/Math.PI,lat=(2*Math.atan(Math.exp(y/R))-Math.PI/2)*180/Math.PI,kind=g.speed&&g.red?"mixed":g.red?"red":"speed",label=kind==="red"?"Zone de vigilance — franchissement":"Zone de vigilance — vitesse";features.push({type:"Feature",id:key,properties:{id:key,kind,label,count:g.speed+g.red,speedCount:g.speed,redCount:g.red,source:"Ministère de l’Intérieur · données ouvertes",road:Array.from(g.roads).slice(0,2).join(" / ")},geometry:makeCircle(lon,lat,1500)});}
+  return features;
+}
+async function loadNationalDangerZones(){
+  try{
+    const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),15000);let res;
+    try{res=await fetch(DANGER_DATA_URL,{signal:ctrl.signal,cache:"no-cache"});}finally{clearTimeout(timeout);}
+    if(!res.ok)throw new Error("Téléchargement national indisponible (HTTP "+res.status+").");const csv=await res.text();const features=parseNationalRadarCSV(csv);if(!features.length)throw new Error("Aucune zone exploitable dans le fichier national.");setDangerData(features,"Ministère de l’Intérieur / data.gouv.fr");return;
+  }catch(error){
+    try{const c=JSON.parse(localStorage.getItem(DANGER_CACHE_KEY)||"null");if(c&&Array.isArray(c.features)&&c.features.length){dangerZoneFeatures=c.features;dangerLoadSource=(c.source||"cache local")+" · cache local";if(mapReady&&map.getSource("tempo-danger-zones"))map.getSource("tempo-danger-zones").setData({type:"FeatureCollection",features:dangerZoneFeatures});updateDataNotes();return;}}catch(e){}
+    dangerZoneFeatures=[];dangerLoadSource="indisponible";updateDataNotes();console.warn("Zones de vigilance :",error);
+  }
+}
+function inspectTrafficXML(xmlText){
+  const doc=new DOMParser().parseFromString(xmlText,"application/xml");if(doc.querySelector("parsererror"))throw new Error("Flux trafic XML invalide.");
+  const nodes=Array.from(doc.getElementsByTagName("*")),out=[],seen=[];
+  const statusRe=/(congested|congestion|dense|heavy\s*traffic|slow\s*traffic|traffic\s*jam|queuingtraffic|stationarytraffic|queue|ralenti|bouch[eé]|satur[ée])/i;
+  function coordIn(el){const descendants=[el,...Array.from(el.getElementsByTagName("*"))];let lat=null,lon=null;for(const n of descendants){const nm=(n.localName||n.nodeName||"").toLowerCase().replace(/.*:/,"");const val=Number(String(n.textContent||"").trim().replace(",","."));if(!Number.isFinite(val))continue;if(/^(latitude|lat)$/.test(nm)&&Math.abs(val)<=90)lat=val;if(/^(longitude|lon)$/.test(nm)&&Math.abs(val)<=180)lon=val;}return lat!==null&&lon!==null?{lat,lon}:null;}
+  for(const el of nodes){if(el.children.length>3)continue;const val=String(el.textContent||"").trim();if(val.length>80||!statusRe.test(val))continue;let parent=el,pt=null;for(let i=0;i<8&&parent;i++,parent=parent.parentElement){pt=coordIn(parent);if(pt)break;}if(!pt)continue;if(seen.some(x=>Math.hypot((x.lat-pt.lat)*111000,(x.lon-pt.lon)*70000)<350))continue;seen.push(pt);out.push({type:"Feature",properties:{state:"dense",label:"Trafic dense / congestion signalée par le flux public"},geometry:{type:"Point",coordinates:[pt.lon,pt.lat]}});if(out.length>=350)break;}
+  return out;
+}
+async function loadPublicTraffic(){
+  try{const ctrl=new AbortController(),timeout=setTimeout(()=>ctrl.abort(),12000);let res;try{res=await fetch(TRAFFIC_FEED_URL,{signal:ctrl.signal,cache:"no-cache"});}finally{clearTimeout(timeout);}if(!res.ok)throw new Error("Flux indisponible");const xml=await res.text();const features=inspectTrafficXML(xml);congestionFeatures=features;trafficFeedState="ready";if(mapReady&&map.getSource("tempo-congestion"))map.getSource("tempo-congestion").setData({type:"FeatureCollection",features:congestionFeatures});const t=$("trafficComplexity");if(t&&features.length)t.textContent+=` · ${features.length} signalements de trafic dense du flux public (non exhaustif).`;else if(t)t.textContent+=" Le flux public ne fournit pas de position exploitable pour chaque bouchon ou feu.";
+  }catch(e){trafficFeedState="unavailable";}
+  updateDataNotes();
+}
+function setZoneVisibility(){dangerZonesEnabled=!dangerZonesEnabled;addDangerLayers();const b=$("dangerToggleButton");if(b){b.setAttribute("aria-pressed",String(dangerZonesEnabled));b.textContent=dangerZonesEnabled?"⚠ Vigilance : ON":"⚠ Vigilance : OFF";}}
+function checkDangerZoneProximity(pos){if(!navigationActive||!dangerZoneFeatures.length||Date.now()-lastDangerAlertAt<10000)return;let closest=null,dist=Infinity;for(const f of dangerZoneFeatures){const ring=f.geometry?.coordinates?.[0];if(!ring?.length)continue;const c=ring.reduce((a,p)=>[a[0]+p[0]/ring.length,a[1]+p[1]/ring.length],[0,0]);const d=haversine([pos.lon,pos.lat],c);if(d<dist){dist=d;closest=f;}}if(closest&&dist<1900&&!alertedZoneIds.has(closest.id)){alertedZoneIds.add(closest.id);lastDangerAlertAt=Date.now();speak("Zone de vigilance routière à proximité. Respectez la limitation, les feux et la signalisation.");}if(closest&&dist>2600)alertedZoneIds.delete(closest.id);}
+function navigationPadding(){return{top:Math.round(window.innerHeight*.22),right:12,bottom:0,left:12};}
+function applyRoadCamera(pos,duration=750,forceRoadView=true){if(!mapReady||!pos)return;const headingValue=Number.isFinite(pos.heading)&&pos.heading>=0?pos.heading:heading;const roadPitch=(forceRoadView&&!tilted)?55:0;map.easeTo({center:[pos.lon,pos.lat],zoom:navigationActive?18.2:17.2,pitch:roadPitch,bearing:roadPitch?headingValue:0,padding:roadPitch?navigationPadding():{top:0,right:12,bottom:0,left:12},duration,essential:true});}
+function autoLocateOnStart(){if(!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(pos=>{currentPosition={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:pos.coords.accuracy||0,heading:pos.coords.heading,speed:pos.coords.speed,timestamp:pos.timestamp};$("gpsStatus").textContent="GPS actif";$("gpsStatus").classList.add("good");setCarMarker();applyRoadCamera(currentPosition,1000,true);},()=>{/* L’utilisateur peut activer le GPS avec le bouton dédié. */},{enableHighAccuracy:true,timeout:9000,maximumAge:30000});}
+map.on("load",()=>{mapReady=true;addRouteLayers();map.resize();loadPointerSettings();loadNationalDangerZones();loadPublicTraffic();autoLocateOnStart();});
+map.on("click","tempo-danger-fill",e=>{const f=e.features&&e.features[0];if(!f)return;const p=f.properties||{},node=document.createElement("div");node.style.cssText="font:13px -apple-system,BlinkMacSystemFont,sans-serif;color:#17212b;max-width:230px;line-height:1.45;padding:2px";const h=document.createElement("strong");h.textContent="Zone de vigilance routière";const d=document.createElement("div");d.textContent=(p.kind==="red"?"Franchissement / feu rouge possible":p.kind==="mixed"?"Vitesse et franchissement possibles":"Vitesse possible")+" · secteur généralisé";const n=document.createElement("div");n.textContent="Données : Ministère de l’Intérieur / data.gouv.fr. Ce secteur ne localise pas précisément un radar.";n.style.marginTop="5px";node.append(h,d,n);new maplibregl.Popup({closeButton:true,offset:8}).setLngLat(e.lngLat).setDOMContent(node).addTo(map);});
+map.on("mouseenter","tempo-danger-fill",()=>{map.getCanvas().style.cursor="pointer";});map.on("mouseleave","tempo-danger-fill",()=>{map.getCanvas().style.cursor="";});
+map.on("click","tempo-congestion-points",e=>{const f=e.features&&e.features[0];if(!f)return;new maplibregl.Popup({closeButton:true,offset:8}).setLngLat(e.lngLat).setText("Trafic dense signalé dans le flux routier public. Information non exhaustive; ralentis et observe la route.").addTo(map);});
 function setStatus(msg,error=false){const e=$("status");e.textContent=msg||"";e.classList.toggle("visible",!!msg);e.classList.toggle("error",!!error);}
 function setBusy(v){busy=v;$("searchButton").disabled=v;$("searchButton").textContent=v?"Recherche…":"Chercher ↗";}
 function fmtDuration(s){const m=Math.max(0,Math.round((Number(s)||0)/60));if(m<60)return m+" min";const h=Math.floor(m/60),r=m%60;return r?h+" h "+r+" min":h+" h";}
@@ -123,24 +260,58 @@ function smoothMoveMarker(target, targetHeading){if(!carMarker||!displayedMarker
 function setCarMarker(){if(!mapReady||!currentPosition)return;const h=Number.isFinite(currentPosition.heading)&&currentPosition.heading>=0?currentPosition.heading:heading;if(Number.isFinite(currentPosition.heading)&&currentPosition.heading>=0)heading=currentPosition.heading;if(!carMarker){const el=document.createElement("div");el.className="car-marker style-"+markerStyle;const core=document.createElement("div");core.className="pointer-core";el.append(core);carMarker=new maplibregl.Marker({element:el,anchor:"center",rotationAlignment:"map",pitchAlignment:"map"}).setLngLat([currentPosition.lon,currentPosition.lat]).addTo(map);displayedMarkerPoint={lat:currentPosition.lat,lon:currentPosition.lon};displayedMarkerHeading=h;applyPointerStyle();}smoothMoveMarker(currentPosition,h);}
 function setDestinationMarker(){if(!mapReady)return;if(destinationMarker){destinationMarker.remove();destinationMarker=null;}if(destinationPoint){const el=document.createElement("div");el.style.cssText="width:18px;height:18px;border-radius:50%;background:#fff;border:5px solid #38b7ff;box-shadow:0 0 0 6px #38b7ff33,0 2px 12px #0009";destinationMarker=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat([destinationPoint.lon,destinationPoint.lat]).setPopup(new maplibregl.Popup({offset:18}).setText(destinationPoint.label||"Destination")).addTo(map);}}
 function updateRouteSource(){if(!mapReady||!map.getSource("tempo-routes"))return;const features=[];routes.forEach((r,i)=>{if(r.geometry)features.push({type:"Feature",properties:{selected:i===selectedRouteIndex,index:i},geometry:r.geometry});});routeFeatureCollection={type:"FeatureCollection",features};map.getSource("tempo-routes").setData(routeFeatureCollection);}
-function fitRoute(){if(!mapReady||!routes[selectedRouteIndex]?.geometry)return;const c=routes[selectedRouteIndex].geometry.coordinates;if(!c.length)return;const bounds=new maplibregl.LngLatBounds(c[0],c[0]);c.forEach(x=>bounds.extend(x));map.fitBounds(bounds,{padding:{top:90,bottom:300,left:30,right:30},maxZoom:16,duration:800});}
+function fitRoute(){if(!mapReady||!routes[selectedRouteIndex]?.geometry)return;const c=routes[selectedRouteIndex].geometry.coordinates;if(!c.length)return;const bounds=new maplibregl.LngLatBounds(c[0],c[0]);c.forEach(x=>bounds.extend(x));map.fitBounds(bounds,{padding:{top:80,bottom:Math.min(260,Math.round(window.innerHeight*.28)),left:28,right:28},maxZoom:16,duration:850});}
 function fmtPlaceChoice(f){const xy=f.geometry?.coordinates;if(!xy||xy.length<2)return;const p=f.properties||{},label=placeLabel(p),b=document.createElement("button");b.type="button";b.className="place-choice";const strong=document.createElement("strong"),small=document.createElement("small");strong.textContent=p.name||label;small.textContent=label;b.append(strong,small);b.addEventListener("click",async()=>{destinationPoint={lon:Number(xy[0]),lat:Number(xy[1]),label};$("destination").value=label;$("places").replaceChildren();try{await calculateRoutes();expandSheet($("plannerSheet"));}catch(e){setStatus(e.message||"Impossible de calculer le trajet.",true);}});return b;}
 async function findPlaces(q){const params=new URLSearchParams({q,limit:"6",lang:"fr"});if(currentPosition){params.set("lat",currentPosition.lat);params.set("lon",currentPosition.lon);}const res=await fetch("https://photon.komoot.io/api/?"+params);if(!res.ok)throw new Error("Le service de recherche de lieux ne répond pas.");return(await res.json()).features||[];}
-const RECENT_KEY="tempoGpsRecentRoutesV1";
-let tempoWakeLock=null;
-function getRecentRoutes(){try{return JSON.parse(localStorage.getItem(RECENT_KEY)||"[]").filter(x=>x&&x.destination&&Number.isFinite(x.lon)&&Number.isFinite(x.lat));}catch(e){return [];}}
-function renderRecentRoutes(){const list=$("recentList");if(!list)return;list.replaceChildren();const items=getRecentRoutes().slice(0,7);if(!items.length){const empty=document.createElement("div");empty.className="traffic-note";empty.textContent="Tes destinations recherchées apparaîtront ici.";list.append(empty);return;}items.forEach(item=>{const b=document.createElement("button");b.type="button";b.className="recent-item";const ico=document.createElement("span");ico.className="recent-icon";ico.textContent="↗";const copy=document.createElement("span");copy.className="recent-copy";const name=document.createElement("strong");name.textContent=item.destination;const meta=document.createElement("small");meta.textContent=new Date(item.date||Date.now()).toLocaleDateString("fr-FR",{day:"2-digit",month:"short"})+" · Relancer le trajet";copy.append(name,meta);const arrow=document.createElement("span");arrow.className="recent-arrow";arrow.textContent="›";b.append(ico,copy,arrow);b.addEventListener("click",async()=>{destinationPoint={lon:item.lon,lat:item.lat,label:item.destination};$("destination").value=item.destination;$("places").replaceChildren();try{await calculateRoutes();expandSheet($("plannerSheet"));}catch(e){setStatus(e.message||"Impossible de recalculer ce trajet.",true);}});list.append(b);});}
-function saveRecentRoute(){if(!destinationPoint)return;const label=(destinationPoint.label||$("destination").value||"Destination").trim();const items=getRecentRoutes().filter(x=>!(Math.abs(x.lon-destinationPoint.lon)<0.0001&&Math.abs(x.lat-destinationPoint.lat)<0.0001));items.unshift({destination:label,lon:destinationPoint.lon,lat:destinationPoint.lat,date:Date.now()});try{localStorage.setItem(RECENT_KEY,JSON.stringify(items.slice(0,12)));}catch(e){}renderRecentRoutes();}
-async function requestWakeLock(){if(!navigationActive||!("wakeLock" in navigator))return;try{if(tempoWakeLock&&!tempoWakeLock.released)return;tempoWakeLock=await navigator.wakeLock.request("screen");tempoWakeLock.addEventListener("release",()=>{tempoWakeLock=null;});}catch(e){/* Le navigateur ou le système peut refuser le maintien éveillé. */}}
-async function releaseWakeLock(){if(tempoWakeLock){try{await tempoWakeLock.release();}catch(e){}tempoWakeLock=null;}}
 async function searchSubmit(e){e.preventDefault();if(busy)return;try{setBusy(true);setStatus("Recherche de la destination…");$("places").replaceChildren();const f=await findPlaces($("destination").value.trim());if(!f.length){setStatus("Aucun lieu trouvé. Essaie une adresse plus précise.",true);return;}f.forEach(x=>{const el=fmtPlaceChoice(x);if(el)$("places").append(el);});setStatus("Choisis la bonne destination dans la liste.");expandSheet($("plannerSheet"));}catch(err){setStatus(err.message||"La recherche a échoué.",true);}finally{setBusy(false);}}
 function stepsFor(r){return(r?.legs||[]).flatMap(l=>l.steps||[]);}
 function roadNames(r){const a=[];stepsFor(r).forEach(s=>{const n=String(s.name||s.ref||"").trim();if(n&&!a.includes(n))a.push(n);});return a.slice(0,5);}
 function directionText(s){if(!s)return"Continuez sur l’itinéraire.";const m=s.maneuver||{},t=String(m.type||"").toLowerCase(),d=String(m.modifier||"").toLowerCase(),n=s.name?" sur "+s.name:"",dirs={"uturn":"Faites demi-tour","sharp right":"Tournez franchement à droite","right":"Tournez à droite","slight right":"Obliquez légèrement à droite","straight":"Continuez tout droit","slight left":"Obliquez légèrement à gauche","left":"Tournez à gauche","sharp left":"Tournez franchement à gauche"};if(t==="arrive")return"Vous arrivez à destination.";if(t==="depart")return s.name?"Démarrez sur "+s.name+".":"Démarrez et suivez l’itinéraire.";if(t.includes("roundabout")||t.includes("rotary"))return m.exit?"Au rond-point, prenez la sortie "+m.exit+n+".":"Engagez-vous dans le rond-point"+n+".";if(t==="merge")return"Rejoignez la voie"+n+".";if(t.includes("ramp"))return"Prenez la bretelle"+n+".";if(t==="fork")return"À l’embranchement, "+(d.includes("left")?"restez à gauche":d.includes("right")?"restez à droite":"suivez l’itinéraire")+n+".";if(t==="end of road")return"Au bout de la route, "+(dirs[d]||"continuez")+n+".";if(t==="turn")return(dirs[d]||"Continuez")+n+".";return s.name?"Continuez sur "+s.name+".":"Continuez sur l’itinéraire.";}
 function turnIcon(s){const m=s?.maneuver||{},t=String(m.type||"").toLowerCase(),d=String(m.modifier||"").toLowerCase();if(t==="arrive")return"✓";if(t.includes("roundabout")||t.includes("rotary"))return"⟳";if(t==="uturn")return"↶";if(d.includes("left"))return"↰";if(d.includes("right"))return"↱";return"↑";}
-function renderRouteOptions(){const r=routes[selectedRouteIndex];if(!r)return;$("duration").textContent=fmtDuration(r.duration);$("distance").textContent=fmtDistance(r.distance);const c=$("routeOptions");c.replaceChildren();routes.forEach((x,i)=>{const b=document.createElement("button");b.type="button";b.className="route-choice"+(i===selectedRouteIndex?" selected":"");const left=document.createElement("div"),strong=document.createElement("strong"),small=document.createElement("small"),time=document.createElement("div");strong.textContent=i===0?"Le plus rapide":"Option "+(i+1);small.textContent=roadNames(x).join(" → ")||"Axes routiers non nommés";small.textContent+=" · "+fmtDistance(x.distance);time.className="route-time";time.textContent=fmtDuration(x.duration);left.append(strong,small);b.append(left,time);b.addEventListener("click",()=>{selectedRouteIndex=i;updateRouteSource();renderRouteOptions();fitRoute();});c.append(b);});renderSteps(r);const names=roadNames(r),junctions=stepsFor(r).filter(s=>/roundabout|rotary|fork|merge|ramp|end of road/i.test(String(s.maneuver?.type||""))).length;$("trafficComplexity").textContent=(names.length?"Axes identifiés : "+names.join(" · ")+". ":"")+(junctions?"Parcours avec "+junctions+" manœuvres nécessitant de l’attention. ":"")+"Pas de bouchon ou d’incident confirmé : le trafic en direct n’est pas connecté.";$("routeResults").hidden=false;}
+
+const RECENT_ROUTES_KEY="tempoGpsRecentRoutesV1";
+function getRecentRoutes(){try{const v=JSON.parse(localStorage.getItem(RECENT_ROUTES_KEY)||"[]");return Array.isArray(v)?v:[]}catch(e){return[]}}
+function saveRecentRoute(origin,route){
+  if(!destinationPoint||!Number.isFinite(destinationPoint.lon)||!Number.isFinite(destinationPoint.lat))return;
+  const item={id:String(Date.now()),label:String(destinationPoint.label||$("destination").value||"Destination"),lon:destinationPoint.lon,lat:destinationPoint.lat,originLat:origin?.lat??null,originLon:origin?.lon??null,time:Date.now(),distance:Number(route?.distance)||0,duration:Number(route?.duration)||0};
+  const list=getRecentRoutes().filter(x=>!(x&&Math.abs(Number(x.lon)-item.lon)<0.0018&&Math.abs(Number(x.lat)-item.lat)<0.0018));
+  list.unshift(item);
+  try{localStorage.setItem(RECENT_ROUTES_KEY,JSON.stringify(list.slice(0,12)))}catch(e){setStatus("Impossible d’enregistrer l’historique sur cet appareil.",true)}
+  renderRecentRoutes();
+}
+function renderRecentRoutes(){
+  const box=$("recentRoutes");if(!box)return;box.replaceChildren();
+  const list=getRecentRoutes();
+  const heading=document.createElement("div");heading.className="recent-heading";
+  const title=document.createElement("span");title.textContent="Trajets récents";heading.append(title);
+  if(list.length){const clear=document.createElement("button");clear.type="button";clear.className="recent-clear";clear.textContent="Tout effacer";clear.addEventListener("click",()=>{try{localStorage.removeItem(RECENT_ROUTES_KEY)}catch(e){}renderRecentRoutes();});heading.append(clear)}
+  box.append(heading);
+  if(!list.length){const empty=document.createElement("div");empty.className="traffic-note";empty.textContent="Tes destinations apparaîtront ici automatiquement après un calcul d’itinéraire.";box.append(empty);return;}
+  const container=document.createElement("div");container.className="recent-list";
+  list.forEach(item=>{
+    if(!item||!Number.isFinite(Number(item.lon))||!Number.isFinite(Number(item.lat)))return;
+    const entry=document.createElement("div");entry.className="recent-entry";
+    const open=document.createElement("button");open.type="button";open.className="recent-item";
+    const icon=document.createElement("span");icon.className="recent-icon";icon.textContent="↗";
+    const copy=document.createElement("span");copy.className="recent-copy";
+    const name=document.createElement("span");name.className="recent-name";name.textContent=String(item.label||"Destination");
+    const meta=document.createElement("span");meta.className="recent-meta";const date=new Date(Number(item.time)||Date.now());meta.textContent=[date.toLocaleDateString("fr-FR",{day:"2-digit",month:"short"}),item.distance?fmtDistance(item.distance):"",item.duration?fmtDuration(item.duration):""].filter(Boolean).join(" · ");
+    copy.append(name,meta);open.append(icon,copy);
+    open.addEventListener("click",async()=>{destinationPoint={lon:Number(item.lon),lat:Number(item.lat),label:String(item.label||"Destination")};$("destination").value=destinationPoint.label;$("places").replaceChildren();try{await calculateRoutes();expandSheet($("plannerSheet"));}catch(e){setStatus(e.message||"Impossible de relancer ce trajet.",true)}});
+    const del=document.createElement("button");del.type="button";del.className="recent-delete";del.textContent="×";del.setAttribute("aria-label","Supprimer "+String(item.label||"ce trajet"));del.addEventListener("click",()=>{try{localStorage.setItem(RECENT_ROUTES_KEY,JSON.stringify(getRecentRoutes().filter(x=>x.id!==item.id)))}catch(e){}renderRecentRoutes()});
+    entry.append(open,del);container.append(entry);
+  });
+  box.append(container);
+}
+async function requestScreenWakeLock(){
+  if(!navigationActive||!document||document.visibilityState!=="visible"||!("wakeLock" in navigator))return;
+  try{if(screenWakeLock&&screenWakeLock.released===false)return;screenWakeLock=await navigator.wakeLock.request("screen");screenWakeLock.addEventListener("release",()=>{screenWakeLock=null});}catch(e){/* Le navigateur ou le système peut refuser le maintien de l’écran. */}
+}
+async function releaseScreenWakeLock(){if(screenWakeLock){try{await screenWakeLock.release()}catch(e){}screenWakeLock=null}}
+
+function renderRouteOptions(){const r=routes[selectedRouteIndex];if(!r)return;$("duration").textContent=fmtDuration(r.duration);$("distance").textContent=fmtDistance(r.distance);const c=$("routeOptions");c.replaceChildren();routes.forEach((x,i)=>{const b=document.createElement("button");b.type="button";b.className="route-choice"+(i===selectedRouteIndex?" selected":"");const left=document.createElement("div"),strong=document.createElement("strong"),small=document.createElement("small"),time=document.createElement("div");strong.textContent=i===0?"Le plus rapide":"Option "+(i+1);small.textContent=roadNames(x).join(" → ")||"Axes routiers non nommés";small.textContent+=" · "+fmtDistance(x.distance);time.className="route-time";time.textContent=fmtDuration(x.duration);left.append(strong,small);b.append(left,time);b.addEventListener("click",()=>{selectedRouteIndex=i;updateRouteSource();renderRouteOptions();fitRoute();});c.append(b);});renderSteps(r);updateDataNotes();$("routeResults").hidden=false;}
 function renderSteps(r){const c=$("routeSteps");c.replaceChildren();stepsFor(r).forEach((s,i)=>{const row=document.createElement("div");row.className="step";const num=document.createElement("div");num.className="step-num";num.textContent=i+1;const copy=document.createElement("div"),txt=document.createElement("div"),meta=document.createElement("div");txt.className="step-text";txt.textContent=directionText(s);meta.className="step-meta";meta.textContent=[s.name,Number.isFinite(s.distance)?fmtDistance(s.distance):"",Number.isFinite(s.duration)?fmtDuration(s.duration):""].filter(Boolean).join(" · ");copy.append(txt,meta);row.append(num,copy);c.append(row);});}
-async function calculateRoutes(opts={}){const reroute=opts.reroute===true;setBusy(true);try{const origin=opts.fresh===false&&currentPosition?currentPosition:await requestPosition();if(!destinationPoint)throw new Error("Choisis d’abord une destination.");setStatus(reroute?"Recalcul de l’itinéraire…":"Calcul des itinéraires…");const coords=origin.lon+","+origin.lat+";"+destinationPoint.lon+","+destinationPoint.lat;const res=await fetch("https://router.project-osrm.org/route/v1/driving/"+coords+"?alternatives=true&overview=full&geometries=geojson&steps=true");if(!res.ok)throw new Error("Le service de calcul d’itinéraire ne répond pas.");const data=await res.json();if(data.code!=="Ok"||!data.routes?.length)throw new Error("Aucun itinéraire routier trouvé.");routes=data.routes.filter(r=>r.geometry&&Number.isFinite(r.distance)).sort((a,b)=>a.duration-b.duration);if(!routes.length)throw new Error("Aucun itinéraire exploitable.");selectedRouteIndex=0;updateRouteSource();setDestinationMarker();renderRouteOptions();if(navigationActive&&reroute){setupNavigationRoute(routes[0]);updateDriveDock();setStatus("Itinéraire recalculé.");}else{fitRoute();saveRecentRoute();setStatus("Itinéraire prêt. Temps estimé, sans trafic en direct.");}$("plannerSheet").classList.remove("collapsed");}finally{setBusy(false);}}
+async function calculateRoutes(opts={}){const reroute=opts.reroute===true;setBusy(true);try{const origin=opts.fresh===false&&currentPosition?currentPosition:await requestPosition();if(!destinationPoint)throw new Error("Choisis d’abord une destination.");setStatus(reroute?"Recalcul de l’itinéraire…":"Calcul des itinéraires…");const coords=origin.lon+","+origin.lat+";"+destinationPoint.lon+","+destinationPoint.lat;const res=await fetch("https://router.project-osrm.org/route/v1/driving/"+coords+"?alternatives=true&overview=full&geometries=geojson&steps=true");if(!res.ok)throw new Error("Le service de calcul d’itinéraire ne répond pas.");const data=await res.json();if(data.code!=="Ok"||!data.routes?.length)throw new Error("Aucun itinéraire routier trouvé.");routes=data.routes.filter(r=>r.geometry&&Number.isFinite(r.distance)).sort((a,b)=>a.duration-b.duration);if(!routes.length)throw new Error("Aucun itinéraire exploitable.");selectedRouteIndex=0;updateRouteSource();setDestinationMarker();renderRouteOptions();if(!reroute)saveRecentRoute(origin,routes[selectedRouteIndex]);if(navigationActive&&reroute){setupNavigationRoute(routes[0]);updateDriveDock();setStatus("Itinéraire recalculé.");}else{fitRoute();setStatus("Itinéraire prêt. Les bouchons ne sont pas tous disponibles en direct.");}$("plannerSheet").classList.remove("collapsed");}finally{setBusy(false);}}
 function chooseSheet(sheet,expand){if(sheet===$("plannerSheet")&&navigationActive)return;sheet.classList.toggle("collapsed",!expand);sheet.classList.toggle("expanded",expand);const label=sheet.id==="driveSheet"?$("driveSheetState"):sheet.querySelector(".sheet-state");if(label)label.textContent=expand?"GLISSER VERS LE BAS POUR RÉDUIRE":"GLISSER VERS LE HAUT POUR OUVRIR";setTimeout(()=>map.resize(),300);}
 function expandSheet(sheet){chooseSheet(sheet,true);}
 function collapseSheet(sheet){chooseSheet(sheet,false);}
@@ -157,30 +328,42 @@ function checkOverspeed(kmh){if(!Number.isFinite(kmh)||speedLimitValue===null){$
 function pointSegmentDistance(p,a,b){const lat=p.lat,mlat=111320,mlon=111320*Math.cos(lat*Math.PI/180),px=p.lon*mlon,py=p.lat*mlat,ax=a.lon*mlon,ay=a.lat*mlat,bx=b.lon*mlon,by=b.lat*mlat,dx=bx-ax,dy=by-ay,len=dx*dx+dy*dy;let t=len?((px-ax)*dx+(py-ay)*dy)/len:0;t=Math.max(0,Math.min(1,t));return Math.hypot(px-(ax+t*dx),py-(ay+t*dy));}
 async function fetchSpeedLimit(p,force=false){if(speedLimitQueryInProgress||(!force&&Date.now()-lastSpeedLimitQuery<30000))return;speedLimitQueryInProgress=true;lastSpeedLimitQuery=Date.now();try{const q='[out:json][timeout:12];way(around:35,'+p.lat+','+p.lon+')["highway"]["maxspeed"];out tags geom;';const res=await fetch("https://overpass-api.de/api/interpreter?data="+encodeURIComponent(q));if(!res.ok)throw Error();const data=await res.json();let best=null,bestD=Infinity;for(const w of data.elements||[]){const g=w.geometry||[];if(g.length<2)continue;let dist=Infinity;for(let i=0;i<g.length-1;i++)dist=Math.min(dist,pointSegmentDistance(p,{lat:g[i].lat,lon:g[i].lon},{lat:g[i+1].lat,lon:g[i+1].lon}));const limit=parseMaxspeed(w.tags?.maxspeed);if(limit!==null&&dist<bestD){bestD=dist;best={limit,name:w.tags.name||w.tags.ref||"route proche",dist};}}if(best&&best.dist<=35)updateLimitUI(best.limit,"OpenStreetMap · "+best.name+" · "+Math.round(best.dist)+" m");else updateLimitUI(null,"Limitation non renseignée à proximité");}catch(e){updateLimitUI(null,"Donnée temporairement indisponible");}finally{speedLimitQueryInProgress=false;}}
 function updateDriveDock(){if(!navigationActive||!navigationRoute||!currentPosition)return;const close=closestPoint(currentPosition),total=Number(navigationRoute.distance)||0;navigationProgress=Math.max(navigationProgress,Math.min(total,close.along));const remaining=Math.max(0,total-navigationProgress),duration=total?(Number(navigationRoute.duration)||0)*remaining/total:0,i=stepIndex(navigationProgress),step=navigationSteps[i],next=navigationSteps[i+1],toNext=next?Math.max(0,(stepStarts[i+1]||total)-navigationProgress):remaining;$("maneuverIcon").textContent=turnIcon(next||step);$("maneuverLabel").textContent=next?"PROCHAINE MANŒUVRE":"ARRIVÉE";$("maneuverText").textContent=(next?directionText(next):"Vous arrivez à destination.").replace(/\.$/,"");$("maneuverDistance").textContent=next?"Dans "+fmtDistance(toNext):"Bientôt arrivé";$("remainingTime").textContent=fmtDuration(duration);$("remainingDistance").textContent=fmtDistance(remaining);$("arrivalTime").textContent=fmtArrival(duration);if(i!==lastStepSpoken&&step){if(lastStepSpoken!==-1)speak(directionText(step));lastStepSpoken=i;}if(next&&toNext<=300&&toNext>70&&!announcedApproaches.has(i+":300")){announcedApproaches.add(i+":300");speak(directionText(next)+" dans "+Math.round(toNext/50)*50+" mètres.");}if(close.distance>Math.max(65,(currentPosition.accuracy||0)*1.8)&&(currentPosition.accuracy||999)<80){offRouteSamples++;if(offRouteSamples>=3&&!rerouteInProgress&&Date.now()-lastRerouteAt>15000){lastRerouteAt=Date.now();rerouteInProgress=true;calculateRoutes({fresh:false,reroute:true}).catch(e=>setStatus(e.message,true)).finally(()=>rerouteInProgress=false);}}else offRouteSamples=0;if(remaining<=25)finishNavigation();}
-function onPosition(pos){if(!navigationActive)return;currentPosition={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:pos.coords.accuracy||0,heading:pos.coords.heading,speed:pos.coords.speed,timestamp:pos.timestamp};$("gpsStatus").textContent="GPS actif";$("gpsStatus").classList.add("good");setCarMarker();updateSpeed(currentPosition);updateDriveDock();fetchSpeedLimit(currentPosition);if(followUser){const b=Number.isFinite(currentPosition.heading)&&currentPosition.heading>=0?currentPosition.heading:heading;map.easeTo({center:[currentPosition.lon,currentPosition.lat],zoom:18,pitch:tilted?0:62,bearing:tilted?0:b,duration:850,essential:true});}}
-async function startNavigation(){if(navigationActive||busy)return;if(!destinationPoint||!routes.length){setStatus("Choisis une destination et calcule un itinéraire avant de démarrer.",true);expandSheet($("plannerSheet"));return;}try{await requestPosition();if(!routes.length)await calculateRoutes({fresh:false});navigationActive=true;followUser=true;requestWakeLock();setupNavigationRoute(routes[selectedRouteIndex]||routes[0]);updateRouteSource();$("plannerSheet").classList.add("hidden");$("driveSheet").classList.remove("hidden");$("driveSheet").classList.add("collapsed");$("driveSheet").classList.remove("expanded");$("driveSheetState").textContent="GLISSER VERS LE HAUT POUR PLUS D’INFOS";if(navigator.geolocation)navigationWatchId=navigator.geolocation.watchPosition(onPosition,e=>setStatus(({1:"Autorise la localisation pour poursuivre.",2:"Signal GPS indisponible.",3:"Le GPS tarde à répondre."})[e.code]||"Erreur GPS.",true),{enableHighAccuracy:true,timeout:20000,maximumAge:1000});setCarMarker();fetchSpeedLimit(currentPosition,true);if(mapReady){const bearing=Number.isFinite(currentPosition.heading)&&currentPosition.heading>=0?currentPosition.heading:0;map.easeTo({center:[currentPosition.lon,currentPosition.lat],zoom:18,pitch:tilted?0:62,bearing:tilted?0:bearing,duration:1000});}updateDriveDock();speak("Navigation démarrée. "+directionText(navigationSteps[0]));setStatus("Guidage démarré. La carte suit ta position GPS.");}catch(e){navigationActive=false;setStatus(e.message||"Impossible de démarrer la navigation.",true);}}
-function stopNavigation(showPlanner=true){navigationActive=false;followUser=false;releaseWakeLock();if(navigationWatchId!==null&&navigator.geolocation){navigator.geolocation.clearWatch(navigationWatchId);navigationWatchId=null;}if("speechSynthesis"in window)speechSynthesis.cancel();$("driveSheet").classList.add("hidden");if(showPlanner){$("plannerSheet").classList.remove("hidden");expandSheet($("plannerSheet"));}$("gpsStatus").textContent=currentPosition?"GPS actif":"GPS non activé";}
+function onPosition(pos){if(!navigationActive)return;currentPosition={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:pos.coords.accuracy||0,heading:pos.coords.heading,speed:pos.coords.speed,timestamp:pos.timestamp};$("gpsStatus").textContent="GPS actif";$("gpsStatus").classList.add("good");setCarMarker();updateSpeed(currentPosition);updateDriveDock();fetchSpeedLimit(currentPosition);checkDangerZoneProximity(currentPosition);if(followUser){applyRoadCamera(currentPosition,650,true);}}
+async function startNavigation(){if(navigationActive||busy)return;if(!destinationPoint||!routes.length){setStatus("Choisis une destination et calcule un itinéraire avant de démarrer.",true);expandSheet($("plannerSheet"));return;}try{await requestPosition();if(!routes.length)await calculateRoutes({fresh:false});navigationActive=true;followUser=true;requestScreenWakeLock();setupNavigationRoute(routes[selectedRouteIndex]||routes[0]);updateRouteSource();$("plannerSheet").classList.add("hidden");$("driveSheet").classList.remove("hidden");$("driveSheet").classList.add("collapsed");$("driveSheet").classList.remove("expanded");$("driveSheetState").textContent="GLISSER VERS LE HAUT POUR PLUS D’INFOS";if(navigator.geolocation)navigationWatchId=navigator.geolocation.watchPosition(onPosition,e=>setStatus(({1:"Autorise la localisation pour poursuivre.",2:"Signal GPS indisponible.",3:"Le GPS tarde à répondre."})[e.code]||"Erreur GPS.",true),{enableHighAccuracy:true,timeout:20000,maximumAge:1000});setCarMarker();fetchSpeedLimit(currentPosition,true);if(mapReady){applyRoadCamera(currentPosition,1000,true);}updateDriveDock();speak("Navigation démarrée. "+directionText(navigationSteps[0]));setStatus("Guidage démarré. La carte suit ta position GPS.");}catch(e){navigationActive=false;setStatus(e.message||"Impossible de démarrer la navigation.",true);}}
+function stopNavigation(showPlanner=true){navigationActive=false;followUser=false;releaseScreenWakeLock();if(navigationWatchId!==null&&navigator.geolocation){navigator.geolocation.clearWatch(navigationWatchId);navigationWatchId=null;}if("speechSynthesis"in window)speechSynthesis.cancel();$("driveSheet").classList.add("hidden");if(showPlanner){$("plannerSheet").classList.remove("hidden");expandSheet($("plannerSheet"));}$("gpsStatus").textContent=currentPosition?"GPS actif":"GPS non activé";}
 function finishNavigation(){if(!navigationActive)return;stopNavigation(false);speak("Vous êtes arrivé à destination.");setStatus("Tu es arrivé à destination.");$("plannerSheet").classList.remove("hidden");}
-$("clearRecentButton").addEventListener("click",()=>{try{localStorage.removeItem(RECENT_KEY);}catch(e){}renderRecentRoutes();setStatus("Historique effacé.");});
-renderRecentRoutes();
 $("searchForm").addEventListener("submit",searchSubmit);
-$("locateButton").addEventListener("click",async()=>{try{const p=await requestPosition();if(mapReady)map.easeTo({center:[p.lon,p.lat],zoom:16,pitch:0,bearing:0,duration:700});setCarMarker();setStatus("Position GPS actualisée.");}catch(e){setStatus(e.message,true);}});
-$("gpsButton").addEventListener("click",async()=>{try{const p=await requestPosition();setCarMarker();map.easeTo({center:[p.lon,p.lat],zoom:16,duration:700});}catch(e){setStatus(e.message,true);}});
-$("centerButton").addEventListener("click",()=>{if(!currentPosition){requestPosition().then(p=>{setCarMarker();map.easeTo({center:[p.lon,p.lat],zoom:16,duration:700});}).catch(e=>setStatus(e.message,true));return;}followUser=navigationActive;if(mapReady)map.easeTo({center:[currentPosition.lon,currentPosition.lat],zoom:navigationActive?18:16,pitch:navigationActive&&!tilted?62:0,bearing:navigationActive&&!tilted?heading:0,duration:650});});
-$("pointerButton").addEventListener("click",()=>{$("pointerSettings").classList.toggle("open");});
+
+$("menuButton").addEventListener("click",()=>{$("mapControls").classList.toggle("open");});
+$("recentToggleButton").addEventListener("click",()=>{const box=$("recentRoutes");renderRecentRoutes();box.hidden=!box.hidden;if(!box.hidden)expandSheet($("plannerSheet"));});
+$("voiceSearchButton").addEventListener("click",()=>{
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition){setStatus("La dictée n’est pas disponible dans ce navigateur.",true);return;}
+  const recognition=new SpeechRecognition();recognition.lang="fr-FR";recognition.interimResults=false;recognition.maxAlternatives=1;
+  recognition.onstart=()=>setStatus("Écoute en cours… prononce ta destination.");
+  recognition.onresult=e=>{const text=e.results?.[0]?.[0]?.transcript;if(text){$("destination").value=text;$("searchForm").requestSubmit();}};
+  recognition.onerror=()=>setStatus("Je n’ai pas compris. Réessaie ou saisis l’adresse.",true);
+  recognition.start();
+});
+
+$("locateButton").addEventListener("click",async()=>{try{const p=await requestPosition();setCarMarker();applyRoadCamera(p,850,true);followUser=navigationActive;setStatus("Position GPS actualisée.");}catch(e){setStatus(e.message,true);}});
+$("gpsButton").addEventListener("click",async()=>{try{const p=await requestPosition();setCarMarker();applyRoadCamera(p,850,true);}catch(e){setStatus(e.message,true);}});
+$("centerButton").addEventListener("click",()=>{if(!currentPosition){requestPosition().then(p=>{setCarMarker();applyRoadCamera(p,850,true);}).catch(e=>setStatus(e.message,true));return;}followUser=navigationActive;if(mapReady)applyRoadCamera(currentPosition,700,true);});
+$("pointerButton").addEventListener("click",()=>{$("pointerSettings").classList.toggle("open");$("mapControls").classList.remove("open");});
+$("dangerToggleButton").addEventListener("click",setZoneVisibility);
 $("pointerClose").addEventListener("click",()=>$("pointerSettings").classList.remove("open"));
 document.querySelectorAll("[data-pointer-style]").forEach(b=>b.addEventListener("click",()=>{markerStyle=b.dataset.pointerStyle;savePointerSettings();}));
 document.querySelectorAll("[data-pointer-color]").forEach(b=>b.addEventListener("click",()=>{markerColor=b.dataset.pointerColor;savePointerSettings();}));
 $("pointerSize").addEventListener("input",e=>{markerSize=Number(e.target.value)||1;savePointerSettings();});
-$("styleButton").addEventListener("click",()=>{darkStyle=!darkStyle;map.setStyle(darkStyle?"https://tiles.openfreemap.org/styles/liberty":"https://tiles.openfreemap.org/styles/bright");map.once("style.load",()=>{addRouteLayers();updateRouteSource();setCarMarker();setDestinationMarker();});});
-$("tiltButton").addEventListener("click",()=>{tilted=!tilted;if(mapReady){map.easeTo({pitch:tilted?0:62,bearing:tilted?0:(Number.isFinite(currentPosition?.heading)&&currentPosition.heading>=0?currentPosition.heading:heading),duration:700});}$("tiltButton").textContent=tilted?"▤ Vue du dessus":"▱ Vue route";});
+$("styleButton").addEventListener("click",()=>{darkStyle=!darkStyle;map.setStyle(darkStyle?"https://tiles.openfreemap.org/styles/liberty":"https://tiles.openfreemap.org/styles/bright");map.once("style.load",()=>{addRouteLayers();updateRouteSource();setCarMarker();setDestinationMarker();if(map.getSource("tempo-danger-zones"))map.getSource("tempo-danger-zones").setData({type:"FeatureCollection",features:dangerZoneFeatures});if(map.getSource("tempo-congestion"))map.getSource("tempo-congestion").setData({type:"FeatureCollection",features:congestionFeatures});});});
+$("tiltButton").addEventListener("click",()=>{tilted=!tilted;if(mapReady){if(currentPosition)applyRoadCamera(currentPosition,700,true);else map.easeTo({pitch:tilted?0:55,bearing:tilted?0:heading,padding:tilted?{top:0,right:12,bottom:0,left:12}:navigationPadding(),duration:700});}$("tiltButton").textContent=tilted?"▱ Vue route":"▤ Vue du dessus";});
 $("clearButton").addEventListener("click",()=>{if(navigationActive)stopNavigation(false);destinationPoint=null;routes=[];routeFeatureCollection={type:"FeatureCollection",features:[]};if(mapReady&&map.getSource("tempo-routes"))map.getSource("tempo-routes").setData(routeFeatureCollection);if(destinationMarker){destinationMarker.remove();destinationMarker=null;}$("destination").value="";$("places").replaceChildren();$("routeResults").hidden=true;setStatus("Trajet effacé.");});
 $("startButton").addEventListener("click",startNavigation);$("stopButton").addEventListener("click",()=>{stopNavigation(true);setStatus("Navigation arrêtée.");});
 $("voiceButton").addEventListener("click",()=>{voiceEnabled=!voiceEnabled;$("voiceButton").textContent=voiceEnabled?"🔊 Voix activée":"🔇 Voix désactivée";if(!voiceEnabled&&"speechSynthesis"in window)speechSynthesis.cancel();else speak("Guidage vocal activé.");});
 $("stepsToggle").addEventListener("click",()=>{const open=$("routeSteps").classList.toggle("open");$("stepsToggle").setAttribute("aria-expanded",String(open));$("stepsToggle").textContent=open?"⌃ Masquer les étapes":"⌄ Afficher les étapes détaillées";});
 $("collapsePlannerButton").addEventListener("click",()=>collapseSheet($("plannerSheet")));
-enableSwipe($("plannerSheet"),$("plannerHandle"));enableSwipe($("driveSheet"),$("driveHandle"));loadPointerSettings();
-window.addEventListener("resize",()=>{if(mapReady)map.resize();});document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){if(mapReady)map.resize();if(navigationActive)requestWakeLock();}});
+enableSwipe($("plannerSheet"),$("plannerHandle"));enableSwipe($("driveSheet"),$("driveHandle"));loadPointerSettings();renderRecentRoutes();
+window.addEventListener("resize",()=>{if(mapReady){map.resize();if(currentPosition&&followUser)applyRoadCamera(currentPosition,300,true);}});document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){if(mapReady)map.resize();if(navigationActive)requestScreenWakeLock();}});
 </script>
 </body>
 </html>
