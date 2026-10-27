@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#080d13">
+<meta name="theme-color" content="#111111" id="themeColorMeta">
 <meta name="description" content="TEMPO GPS — navigation routière immersive avec guidage vocal.">
 <title>TEMPO GPS — Street Drive</title>
 <link href="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.css" rel="stylesheet">
@@ -71,6 +71,24 @@
 .route-choice.selected .route-badge{color:#b8eaff;border-color:#91dcff2a;background:#91dcff0d}
 @media(max-width:380px){.route-mode{font-size:9px}.route-preferences{padding:10px}.route-settings-grid{gap:6px}}
 
+
+/* TEMPO URBAN — refonte noir / jaune, thèmes automatique, clair et sombre */
+:root{color-scheme:dark;--bg:#0b0b0b;--panel:rgba(18,18,18,.94);--panel2:#202020;--line:rgba(255,204,0,.20);--text:#f7f7f2;--muted:#a8a69a;--blue:#ffcc00;--blue2:#e8b900;--red:#ff5c55;--amber:#ffcc00;--shadow:0 18px 55px #0008;--accent:#ffcc00;--safe-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="light"]{color-scheme:light;--bg:#f2f1ec;--panel:rgba(255,255,250,.96);--panel2:#fffef8;--line:rgba(25,25,20,.15);--text:#191916;--muted:#6d6b61;--blue:#d4a900;--blue2:#b78f00;--red:#c92e2e;--amber:#b78f00;--shadow:0 18px 55px #17171724}
+html,body,#app{background:var(--bg);color:var(--text)}
+button:focus-visible,input:focus-visible{outline-color:#ffcc00}
+.topbar{gap:8px}.top-actions{display:flex;align-items:center;gap:7px;pointer-events:none}.top-actions>*{pointer-events:auto}.brand-pill,.top-action{border-color:var(--line);background:color-mix(in srgb,var(--panel) 90%,transparent);color:var(--text);box-shadow:0 8px 28px #0002}.brand-mark{background:#ffcc00;color:#141414;border-radius:8px}.brand-name{letter-spacing:2px}.brand-sub{color:var(--muted)}.theme-action{min-width:62px;justify-content:center;color:#ffcc00;border-color:#ffcc0060;font-size:9px;letter-spacing:.5px}
+.map-shade{background:linear-gradient(180deg,#0007 0%,transparent 24%,transparent 58%,#0004 100%)}
+:root[data-theme="light"] .map-shade{background:linear-gradient(180deg,#ffffff5c 0%,transparent 22%,transparent 60%,#ffffff38 100%)}
+.map-control{border-color:var(--line);background:color-mix(in srgb,var(--panel) 93%,transparent);color:var(--text)}.map-control:active{border-color:#ffcc00}
+.sheet{border-color:var(--line);background:var(--panel);box-shadow:0 24px 80px #0003}.handle{background:#ffcc00}.sheet-eyebrow,.preferences-title{color:var(--muted)}.sheet-state{color:#ffcc00}.search-input{border-color:var(--line);background:color-mix(in srgb,var(--panel2) 92%,transparent);color:var(--text)}.search-input::placeholder{color:var(--muted)}
+.btn-primary,.search-submit{background:#ffcc00;color:#161616;border-color:#ffcc00}.btn-secondary,.step-toggle,.pointer-option,.settings-close{border-color:var(--line);background:color-mix(in srgb,var(--panel2) 82%,transparent);color:var(--text)}.place-choice,.route-choice{border-color:var(--line);background:color-mix(in srgb,var(--panel2) 76%,transparent);color:var(--text)}.route-choice.selected{border-color:#ffcc00;background:#ffcc0018;box-shadow:inset 3px 0 #ffcc00}.route-time,.metric-value,.summary-item strong{color:var(--blue)}.chip{border-color:#ffcc0050;background:#ffcc0017;color:var(--blue)}.route-mode.active,.pointer-option.active{border-color:#ffcc00;background:#ffcc001b;color:var(--blue);box-shadow:inset 0 -2px var(--blue)}.route-mode{color:var(--text);border-color:var(--line);background:color-mix(in srgb,var(--panel2) 82%,transparent)}
+.metric,.summary-item,.traffic-box,.steps-box,.speed-limit-row{border-color:var(--line);background:color-mix(in srgb,var(--panel2) 74%,transparent)}.maneuver-icon{background:#ffcc001a;border-color:#ffcc0040;color:var(--blue)}.maneuver-label{color:var(--blue)}.speed-circle{background:var(--panel2);color:var(--text);border-color:var(--text);box-shadow:0 0 0 3px #ffcc0025}.speed-circle span{color:var(--muted)}.step-num{background:#ffcc001b;color:var(--blue)}
+.pointer-settings{border-color:var(--line);background:var(--panel)}.pointer-settings h3,.pointer-option{color:var(--text)}.pointer-settings p,.pointer-size{color:var(--muted)}.pointer-size input{accent-color:#ffcc00}.pointer-color.active{box-shadow:0 0 0 3px #ffcc00}.maplibregl-ctrl-attrib{background:color-mix(in srgb,var(--panel) 88%,transparent)!important;color:var(--muted)!important}.maplibregl-ctrl-attrib a{color:var(--blue)!important}.maplibregl-ctrl-group{background:var(--panel)!important;border-color:var(--line)!important}.maplibregl-ctrl-group button span{filter:none}
+#status{background:var(--panel);border-color:var(--line);color:var(--text)}
+:root[data-theme="light"] .maplibregl-ctrl-group button span{filter:invert(1)}
+@media(max-width:390px){.brand-pill{padding:7px 9px}.brand-sub{display:none}.brand-name{font-size:11px}.top-action{padding:8px 9px}.theme-action{min-width:56px}}
+
 </style>
 </head>
 <body>
@@ -78,7 +96,7 @@
 <div id="map" aria-label="Carte routière immersive"></div><div class="map-shade"></div>
 <header class="topbar">
   <button class="menu-button" id="menuButton" type="button" aria-label="Ouvrir les outils de la carte"><span></span><span></span><span></span><i></i></button>
-  <button class="top-action" id="gpsButton" type="button" aria-label="Actualiser le GPS"><span id="gpsStatus">GPS non activé</span></button>
+  <div class="top-actions"><button class="top-action theme-action" id="themeButton" type="button" aria-label="Changer le thème" title="Thème automatique">◐ AUTO</button><button class="top-action" id="gpsButton" type="button" aria-label="Actualiser le GPS"><span id="gpsStatus">GPS non activé</span></button></div>
 </header>
 <div id="status" role="status" aria-live="polite"></div>
 <button class="map-control" id="centerButton" type="button" aria-label="Recentrer la carte">◎</button><div class="map-controls" id="mapControls"><button class="map-control" id="tiltButton" type="button">▱ Vue route</button><button class="map-control" id="styleButton" type="button">◐ Style</button><button class="map-control" id="pointerButton" type="button">➤ Pointeur</button></div>
@@ -149,11 +167,25 @@
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
+
+// Thème de l'interface : automatique selon le système, clair ou sombre forcé.
+const THEME_KEY="tempoUrbanThemeV1";
+const systemTheme=window.matchMedia?window.matchMedia("(prefers-color-scheme: light)"):null;
+function currentSystemTheme(){return systemTheme&&systemTheme.matches?"light":"dark";}
+function readThemePreference(){try{const v=localStorage.getItem(THEME_KEY);return ["auto","light","dark"].includes(v)?v:"auto";}catch(e){return "auto";}}
+let themePreference=readThemePreference();
+function applyInterfaceTheme(){const resolved=themePreference==="auto"?currentSystemTheme():themePreference;document.documentElement.dataset.theme=resolved;document.documentElement.style.colorScheme=resolved;const meta=$("themeColorMeta");if(meta)meta.content=resolved==="light"?"#f2f1ec":"#0b0b0b";const b=$("themeButton");if(b){b.textContent=themePreference==="auto"?"◐ AUTO":themePreference==="light"?"☼ CLAIR":"☾ SOMBRE";b.title=themePreference==="auto"?"Thème automatique (système)":themePreference==="light"?"Thème clair activé":"Thème sombre activé";b.setAttribute("aria-label",b.title);} }
+function cycleInterfaceTheme(){themePreference=themePreference==="auto"?"light":themePreference==="light"?"dark":"auto";try{localStorage.setItem(THEME_KEY,themePreference);}catch(e){}applyInterfaceTheme();}
+$("themeButton").addEventListener("click",cycleInterfaceTheme);
+if(systemTheme){const onSystemThemeChange=()=>{if(themePreference==="auto")applyInterfaceTheme();};if(systemTheme.addEventListener)systemTheme.addEventListener("change",onSystemThemeChange);else if(systemTheme.addListener)systemTheme.addListener(onSystemThemeChange);}
+applyInterfaceTheme();
+
 let screenWakeLock=null;
-let mapReady=false,darkStyle=true,tilted=false,currentPosition=null,destinationPoint=null,routes=[],selectedRouteIndex=0,busy=false,navigationActive=false,navigationWatchId=null,navigationRoute=null,navigationSteps=[],stepStarts=[],geometryCoordinates=[],geometryCumulative=[],navigationProgress=0,followUser=false,voiceEnabled=true,rerouteInProgress=false,offRouteSamples=0,lastRerouteAt=0,announcedApproaches=new Set(),lastStepSpoken=-1,lastPositionForSpeed=null,speedLimitValue=null,lastSpeedLimitQuery=0,speedLimitQueryInProgress=false,overspeedSamples=0,carMarker=null,destinationMarker=null,routeFeatureCollection={type:"FeatureCollection",features:[]},heading=0,markerStyle="arrow",markerColor="#52c7ff",markerSize=1,markerAnimationFrame=0,displayedMarkerPoint=null,displayedMarkerHeading=0,routeMode="fast",preciseArrivalMode=false;
+let mapReady=false,darkStyle=true,tilted=false,currentPosition=null,destinationPoint=null,routes=[],selectedRouteIndex=0,busy=false,navigationActive=false,navigationWatchId=null,navigationRoute=null,navigationSteps=[],stepStarts=[],geometryCoordinates=[],geometryCumulative=[],navigationProgress=0,followUser=false,voiceEnabled=true,rerouteInProgress=false,offRouteSamples=0,lastRerouteAt=0,announcedApproaches=new Set(),lastStepSpoken=-1,lastPositionForSpeed=null,speedLimitValue=null,lastSpeedLimitQuery=0,speedLimitQueryInProgress=false,overspeedSamples=0,carMarker=null,destinationMarker=null,routeFeatureCollection={type:"FeatureCollection",features:[]},heading=0,markerStyle="arrow",markerColor="#ffcc00",markerSize=1,markerAnimationFrame=0,displayedMarkerPoint=null,displayedMarkerHeading=0,routeMode="fast",preciseArrivalMode=false;
 const map=new maplibregl.Map({container:"map",style:"https://tiles.openfreemap.org/styles/liberty",center:[2.3522,48.8566],zoom:5,pitch:0,bearing:0,antialias:true,attributionControl:true,dragRotate:true,touchPitch:true});
 map.addControl(new maplibregl.NavigationControl({showCompass:false,showZoom:false,visualizePitch:false}),"bottom-right");
-function addRouteLayers(){if(!map.getSource("tempo-routes"))map.addSource("tempo-routes",{type:"geojson",data:routeFeatureCollection});if(map.getLayer("tempo-route-main"))return;map.addLayer({id:"tempo-route-halo",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#31baff","line-width":19,"line-opacity":.22,"line-blur":5}});map.addLayer({id:"tempo-route-casing",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#06111d","line-width":13,"line-opacity":.96}});map.addLayer({id:"tempo-route-main",type:"line",source:"tempo-routes",layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":["case",["==",["get","selected"],true],"#40bdff","#71879b"],"line-width":["interpolate",["linear"],["zoom"],5,3,12,5,17,8],"line-opacity":["case",["==",["get","selected"],true],1,.58]}});map.addLayer({id:"tempo-route-core",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#d9f5ff","line-width":2,"line-opacity":.88}});}
+$("styleButton").textContent="◐ Carte sombre";
+function addRouteLayers(){if(!map.getSource("tempo-routes"))map.addSource("tempo-routes",{type:"geojson",data:routeFeatureCollection});if(map.getLayer("tempo-route-main"))return;map.addLayer({id:"tempo-route-halo",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#ffcc00","line-width":19,"line-opacity":.22,"line-blur":5}});map.addLayer({id:"tempo-route-casing",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#171717","line-width":13,"line-opacity":.96}});map.addLayer({id:"tempo-route-main",type:"line",source:"tempo-routes",layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":["case",["==",["get","selected"],true],"#ffcc00","#71879b"],"line-width":["interpolate",["linear"],["zoom"],5,3,12,5,17,8],"line-opacity":["case",["==",["get","selected"],true],1,.58]}});map.addLayer({id:"tempo-route-core",type:"line",source:"tempo-routes",filter:["==",["get","selected"],true],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#fff2a6","line-width":2,"line-opacity":.88}});}
 map.on("load",()=>{mapReady=true;addRouteLayers();map.resize();loadPointerSettings();});
 function setStatus(msg,error=false){const e=$("status");e.textContent=msg||"";e.classList.toggle("visible",!!msg);e.classList.toggle("error",!!error);}
 function setBusy(v){busy=v;$("searchButton").disabled=v;$("searchButton").textContent=v?"Recherche…":"Chercher ↗";}
@@ -280,7 +312,7 @@ $("pointerClose").addEventListener("click",()=>$("pointerSettings").classList.re
 document.querySelectorAll("[data-pointer-style]").forEach(b=>b.addEventListener("click",()=>{markerStyle=b.dataset.pointerStyle;savePointerSettings();}));
 document.querySelectorAll("[data-pointer-color]").forEach(b=>b.addEventListener("click",()=>{markerColor=b.dataset.pointerColor;savePointerSettings();}));
 $("pointerSize").addEventListener("input",e=>{markerSize=Number(e.target.value)||1;savePointerSettings();});
-$("styleButton").addEventListener("click",()=>{darkStyle=!darkStyle;map.setStyle(darkStyle?"https://tiles.openfreemap.org/styles/liberty":"https://tiles.openfreemap.org/styles/bright");map.once("style.load",()=>{addRouteLayers();updateRouteSource();setCarMarker();setDestinationMarker();});});
+$("styleButton").addEventListener("click",()=>{darkStyle=!darkStyle;$("styleButton").textContent=darkStyle?"◐ Carte sombre":"☼ Carte claire";map.setStyle(darkStyle?"https://tiles.openfreemap.org/styles/liberty":"https://tiles.openfreemap.org/styles/bright");map.once("style.load",()=>{addRouteLayers();updateRouteSource();setCarMarker();setDestinationMarker();});});
 $("tiltButton").addEventListener("click",()=>{tilted=!tilted;if(mapReady){map.easeTo({pitch:tilted?0:62,bearing:tilted?0:(Number.isFinite(currentPosition?.heading)&&currentPosition.heading>=0?currentPosition.heading:heading),duration:700});}$("tiltButton").textContent=tilted?"▤ Vue du dessus":"▱ Vue route";});
 $("clearButton").addEventListener("click",()=>{if(navigationActive)stopNavigation(false);destinationPoint=null;routes=[];routeFeatureCollection={type:"FeatureCollection",features:[]};if(mapReady&&map.getSource("tempo-routes"))map.getSource("tempo-routes").setData(routeFeatureCollection);if(destinationMarker){destinationMarker.remove();destinationMarker=null;}$("destination").value="";$("places").replaceChildren();$("routeResults").hidden=true;setStatus("Trajet effacé.");});
 $("startButton").addEventListener("click",startNavigation);$("stopButton").addEventListener("click",()=>{stopNavigation(true);setStatus("Navigation arrêtée.");});
