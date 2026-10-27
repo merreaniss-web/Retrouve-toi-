@@ -1,33 +1,20 @@
 {
-  "id": "./",
-  "name": "TEMPO GPS — Street Drive",
-  "short_name": "TEMPO GPS",
-  "description": "Navigation routière immersive avec guidage GPS et vocal.",
+  "name": "TEMPO — Atlas cartographique",
+  "short_name": "TEMPO",
+  "description": "Navigation routière, guidage vocal et carte personnalisable.",
   "lang": "fr-FR",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#080d13",
-  "theme_color": "#080d13",
+  "background_color": "#e9ece5",
+  "theme_color": "#245b4a",
   "icons": [
     {
-      "src": "./icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icons/icon-maskable-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
